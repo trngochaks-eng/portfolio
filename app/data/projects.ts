@@ -470,6 +470,89 @@ const captionsById: Record<string, LocalizedText[]> = {
 };
 
 const storyById: Record<string, NonNullable<ProjectItem["story"]>> = {
+  project5: {
+    challenge: { ENG: "Architectural and MEP designs kept changing, construction documentation had to be issued urgently, and several projects were running in parallel.", VIE: "Kiến trúc và MEP liên tục thay đổi, hồ sơ thi công phải phát hành gấp và nhiều dự án chạy song song." },
+    approach: {
+      ENG: [
+        "Reused the templates, families and BEP naming rules built on Lot 6.8",
+        "Organised the model into two linked files and one federated file",
+        "Automated repetitive documentation work with in-house TNH Tool commands",
+        "Held coordination meetings with architecture and MEP for every round of changes"
+      ],
+      VIE: [
+        "Dùng lại template, family và quy tắc đặt tên theo BEP đã xây dựng ở Lô 6.8",
+        "Tổ chức mô hình thành 2 file liên kết và 1 file tổng hợp",
+        "Tự động hóa công việc hồ sơ lặp lại bằng các lệnh TNH Tool tự phát triển",
+        "Họp phối hợp với kiến trúc và MEP cho từng đợt thay đổi"
+      ],
+    },
+    result: {
+      ENG: [
+        "Fast start thanks to standards that were already in place",
+        "Construction documentation taken directly from the model"
+      ],
+      VIE: [
+        "Triển khai nhanh nhờ chuẩn đã có sẵn",
+        "Hồ sơ thi công lấy trực tiếp từ mô hình"
+      ],
+    },
+  },
+  project6: {
+    challenge: { ENG: "Architectural and MEP designs kept changing while several projects were running in parallel.", VIE: "Kiến trúc và MEP liên tục thay đổi trong khi nhiều dự án chạy song song." },
+    approach: {
+      ENG: [
+        "Reused the templates, families and BEP naming rules built on Lot 6.8",
+        "Organised the model into two linked files and one federated file",
+        "Automated repetitive documentation work with in-house TNH Tool commands",
+        "Held coordination meetings with architecture and MEP for every round of changes"
+      ],
+      VIE: [
+        "Dùng lại template, family và quy tắc đặt tên theo BEP đã xây dựng ở Lô 6.8",
+        "Tổ chức mô hình thành 2 file liên kết và 1 file tổng hợp",
+        "Tự động hóa công việc hồ sơ lặp lại bằng các lệnh TNH Tool tự phát triển",
+        "Họp phối hợp với kiến trúc và MEP cho từng đợt thay đổi"
+      ],
+    },
+    result: {
+      ENG: [
+        "Fast start thanks to standards that were already in place",
+        "Model and drawings kept consistent during basic design"
+      ],
+      VIE: [
+        "Triển khai nhanh nhờ chuẩn đã có sẵn",
+        "Model và bản vẽ nhất quán trong giai đoạn TKCS"
+      ],
+    },
+  },
+  project8: {
+    challenge: { ENG: "Two buildings on one campus, a 4K kindergarten and a 10K primary school, had to be managed separately yet assembled into a single complete model.", VIE: "Hai công trình trong cùng một khu, Trường Mầm non 4K và Trường Tiểu học 10K, cần quản lý riêng nhưng vẫn phải ghép thành một mô hình hoàn chỉnh." },
+    approach: {
+      ENG: [
+        "Split the project into three Revit files: kindergarten, primary school and a federated model",
+        "Modelled each building independently, then linked both into the federated model",
+        "Checked the CAD drawings against each other before modelling",
+        "Used TNH Tool to convert CAD data into Revit elements"
+      ],
+      VIE: [
+        "Tách dự án thành 3 file Revit: mầm non, tiểu học và file tổng hợp",
+        "Dựng từng công trình độc lập rồi liên kết vào mô hình tổng hợp",
+        "Đối chiếu hồ sơ CAD với nhau trước khi dựng",
+        "Dùng TNH Tool chuyển dữ liệu CAD thành cấu kiện Revit"
+      ],
+    },
+    result: {
+      ENG: [
+        "Basic to technical design models completed on schedule and handed over as planned",
+        "Models matched the CAD drawings",
+        "The project is complete and now in use"
+      ],
+      VIE: [
+        "Hoàn thành mô hình TKCS–TKKT đúng tiến độ, bàn giao đúng kế hoạch",
+        "Mô hình khớp với hồ sơ CAD",
+        "Công trình đã hoàn thành và đưa vào sử dụng"
+      ],
+    },
+  },
   project3: {
     challenge: { ENG: "Architectural and MEP designs changed continuously while structural documentation had to be issued in urgent phases for site works.", VIE: "Kiến trúc và MEP liên tục thay đổi trong khi hồ sơ kết cấu phải phát hành gấp theo từng đợt phục vụ thi công ngoài công trường." },
     approach: {
