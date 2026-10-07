@@ -51,6 +51,7 @@ type ContentItem = {
     typeLabel: string;
     toolsLabel: string;
     detailButton: string;
+    moreTitle: string;
   };
   impact: { value: string; label: string }[];
   toolsSection: {
@@ -144,6 +145,8 @@ const professionalSkills = [
   "BIM Automation & Tool Development",
 ];
 
+const FEATURED_PROJECT_IDS = ["project3", "project4", "project7"];
+
 const content: ContentSchema = {
   ENG: {
     nav: {
@@ -189,6 +192,7 @@ const content: ContentSchema = {
       typeLabel: "Type",
       toolsLabel: "Tools",
       detailButton: "View Details",
+      moreTitle: "More projects",
     },
     impact: [
       { value: "3", label: "Revit modelers led" },
@@ -278,6 +282,7 @@ const content: ContentSchema = {
       typeLabel: "Loại công việc",
       toolsLabel: "Công cụ",
       detailButton: "Xem chi tiết",
+      moreTitle: "Các dự án khác",
     },
     impact: [
       { value: "3", label: "Thành viên Revit dẫn dắt" },
@@ -331,6 +336,12 @@ export default function Home() {
 
   const t = content[language];
   const isDark = theme === "dark";
+  const featuredProjects = projects.filter((project) =>
+    FEATURED_PROJECT_IDS.includes(project.id)
+  );
+  const otherProjects = projects.filter(
+    (project) => !FEATURED_PROJECT_IDS.includes(project.id)
+  );
 
   useEffect(() => {
     document.documentElement.lang = language === "VIE" ? "vi" : "en";
@@ -516,7 +527,7 @@ export default function Home() {
         </p>
 
         <div className="mt-10 space-y-10">
-          {projects.map((project) => (
+          {featuredProjects.map((project) => (
             <Reveal
               as="article"
               key={project.id}
@@ -605,6 +616,47 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <h4 className="mt-16 text-sm font-bold uppercase tracking-[0.08em]">
+          {t.projects.moreTitle}
+        </h4>
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          {otherProjects.map((project) => (
+            <Reveal
+              as="article"
+              key={project.id}
+              className={`group overflow-hidden rounded-4xl transition duration-300 ${themeClasses.card} ${themeClasses.cardHover}`}
+            >
+              <Link href={`/projects/${project.id}`} className="block">
+                <div className={`overflow-hidden ${themeClasses.imageFrame}`}>
+                  <Image
+                    src={project.images[0]}
+                    alt={project.title[language]}
+                    width={1200}
+                    height={800}
+                    className="aspect-[3/2] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+                <div className="p-6">
+                  <p className={`text-xs font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
+                    {project.period[language]} · {project.type[language]}
+                  </p>
+                  <h4 className="mt-3 text-xl font-bold tracking-tight">
+                    {project.title[language]}
+                  </h4>
+                  <p className={`mt-3 text-sm leading-7 ${themeClasses.bodyText}`}>
+                    {project.role[language]}
+                    {project.scale ? ` · ${project.scale[language]}` : ""}
+                  </p>
+                  <span className="mt-5 inline-flex text-sm font-semibold underline-offset-4 group-hover:underline">
+                    {t.projects.detailButton} →
+                  </span>
+                </div>
+              </Link>
             </Reveal>
           ))}
         </div>

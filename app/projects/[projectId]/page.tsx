@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
 import { getProjectById, projects } from "../../data/projects";
+
+export function generateStaticParams() {
+  return projects.map((project) => ({ projectId: project.id }));
+}
 import ProjectDetailClient from "./ProjectDetailClient";
 
 type Props = {
@@ -18,9 +22,26 @@ export async function generateMetadata({ params }: Props) {
     };
   }
 
+  const title = `${project.title.ENG} | Tran Ngoc Ha`;
+  const description = project.description.ENG;
+  const image = encodeURI(project.images[0]);
+
   return {
-    title: `${project.title.ENG} | Tran Ngoc Ha`,
-    description: project.description.ENG,
+    title,
+    description,
+    alternates: { canonical: `/projects/${project.id}` },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      images: [{ url: image, width: 1200, height: 800, alt: project.title.ENG }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
   };
 }
 

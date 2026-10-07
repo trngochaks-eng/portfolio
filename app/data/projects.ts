@@ -22,6 +22,7 @@ export type ProjectItem = {
   };
   tools: string[];
   images: string[];
+  captions?: LocalizedText[];
 };
 
 const THU_THIEM_LOCATION: LocalizedText = {
@@ -29,7 +30,7 @@ const THU_THIEM_LOCATION: LocalizedText = {
   VIE: "Khu chức năng số 6, Khu đô thị mới Thủ Thiêm, Thành phố Thủ Đức, TP.HCM",
 };
 
-export const projects: ProjectItem[] = [
+const rawProjects: ProjectItem[] = [
   {
     id: "project3",
     title: {
@@ -407,6 +408,62 @@ export const projects: ProjectItem[] = [
     ),
   },
 ];
+
+const captionsById: Record<string, LocalizedText[]> = {
+  project3: [
+    { ENG: "Federated structural model: piles, podium and residential towers", VIE: "Mô hình kết cấu tổng hợp: cọc, khối đế và các tòa tháp căn hộ" },
+    { ENG: "Podium levels and pile foundation", VIE: "Các tầng khối đế và hệ móng cọc" },
+    { ENG: "Residential towers with structural elements colour-coded by type", VIE: "Các tòa tháp căn hộ, cấu kiện phân màu theo loại" },
+    { ENG: "Issued sheet set organised by group in the Project Browser", VIE: "Bộ bản vẽ phát hành tổ chức theo nhóm trong Project Browser" },
+    { ENG: "Typical structural floor plan sheet, divided into zones", VIE: "Sheet mặt bằng kết cấu điển hình, chia theo zone" },
+  ],
+  project4: [
+    { ENG: "Federated structural model: curved tower complex on pile foundation", VIE: "Mô hình kết cấu tổng hợp: cụm tháp cong trên hệ móng cọc" },
+    { ENG: "Basement slab and pile layout", VIE: "Mặt bằng sàn hầm và bố trí cọc" },
+    { ENG: "Podium levels with columns and walls colour-coded", VIE: "Các tầng khối đế, cột và vách phân màu" },
+    { ENG: "Tower blocks and core walls above the podium", VIE: "Các khối tháp và lõi vách phía trên khối đế" },
+  ],
+  project5: [
+    { ENG: "Federated model: two residential blocks over a shared basement and pile foundation", VIE: "Mô hình tổng hợp: hai khối căn hộ trên tầng hầm và hệ móng cọc dùng chung" },
+    { ENG: "Basement and podium structure with piles", VIE: "Kết cấu tầng hầm, khối đế và cọc" },
+    { ENG: "Superstructure model with elements colour-coded by type", VIE: "Mô hình kết cấu phần thân, cấu kiện phân màu theo loại" },
+  ],
+  project6: [
+    { ENG: "Federated model: three residential blocks over a shared basement and pile foundation", VIE: "Mô hình tổng hợp: ba khối căn hộ trên tầng hầm và hệ móng cọc dùng chung" },
+    { ENG: "Basement structure and pile layout", VIE: "Kết cấu tầng hầm và bố trí cọc" },
+    { ENG: "Superstructure model of the three blocks", VIE: "Mô hình kết cấu phần thân của ba khối nhà" },
+  ],
+  project7: [
+    { ENG: "Structural model of the 19-storey building on pile foundation", VIE: "Mô hình kết cấu tòa nhà 19 tầng trên hệ móng cọc" },
+    { ENG: "Podium transfer structure and tower frame", VIE: "Kết cấu chuyển ở khối đế và khung tòa tháp" },
+    { ENG: "Frame, core walls and slabs at upper floors", VIE: "Khung, lõi vách và sàn các tầng trên" },
+  ],
+  project8: [
+    { ENG: "Structural plan view in the combined H9 model", VIE: "Mặt bằng kết cấu trong mô hình tổng hợp H9" },
+    { ENG: "Combined H9 model: 3D view, kindergarten and primary school", VIE: "Mô hình tổng hợp H9: góc nhìn 3D, trường mầm non và tiểu học" },
+    { ENG: "Combined H9 model: second 3D view", VIE: "Mô hình tổng hợp H9: góc nhìn 3D thứ hai" },
+    { ENG: "Combined H9 model: third 3D view", VIE: "Mô hình tổng hợp H9: góc nhìn 3D thứ ba" },
+    { ENG: "4K kindergarten model: 3D view", VIE: "Mô hình Trường Mầm non 4K: góc nhìn 3D" },
+    { ENG: "4K kindergarten model: structure and pile foundation", VIE: "Mô hình Trường Mầm non 4K: kết cấu và móng cọc" },
+    { ENG: "10K primary school model: 3D view", VIE: "Mô hình Trường Tiểu học 10K: góc nhìn 3D" },
+    { ENG: "10K primary school model: second view", VIE: "Mô hình Trường Tiểu học 10K: góc nhìn thứ hai" },
+    { ENG: "10K primary school model: third view", VIE: "Mô hình Trường Tiểu học 10K: góc nhìn thứ ba" },
+  ],
+  project2: [
+    { ENG: "Structural 3D model: roof framing, frame and pile foundation", VIE: "Mô hình kết cấu 3D: khung mái, khung chịu lực và móng cọc" },
+    { ENG: "Structural 3D model: side view", VIE: "Mô hình kết cấu 3D: góc nhìn bên" },
+    { ENG: "Structural 3D model: aerial view", VIE: "Mô hình kết cấu 3D: góc nhìn từ trên" },
+    { ENG: "Reinforcement model of frame and foundations", VIE: "Mô hình cốt thép của khung và móng" },
+    { ENG: "Floor beam plan sheet issued from Revit", VIE: "Sheet mặt bằng dầm sàn phát hành từ Revit" },
+    { ENG: "Foundation plan and footing details sheet", VIE: "Sheet mặt bằng móng và chi tiết móng" },
+    { ENG: "Reinforcement bending schedule", VIE: "Bảng thống kê thép" },
+  ],
+};
+
+export const projects: ProjectItem[] = rawProjects.map((project) => ({
+  ...project,
+  captions: captionsById[project.id],
+}));
 
 export function getProjectById(id: string) {
   return projects.find((project) => project.id === id);

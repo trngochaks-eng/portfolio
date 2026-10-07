@@ -184,6 +184,11 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
     );
   };
 
+  const activeCaption =
+    activeImageIndex === null
+      ? undefined
+      : project.captions?.[activeImageIndex]?.[language];
+
   return (
     <main className={`min-h-screen ${pageClasses.page}`}>
       <SiteHeader
@@ -312,6 +317,13 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
                   className="h-auto w-full object-cover transition duration-500 group-hover:scale-[1.025]"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
+                {project.captions?.[startIndex + index] && (
+                  <span
+                    className={`block px-5 py-4 text-sm leading-6 ${pageClasses.softText}`}
+                  >
+                    {project.captions[startIndex + index][language]}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -408,6 +420,11 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
             <p className="text-sm font-semibold">
               {text.imageCounter} {activeImageIndex + 1}{" "}
               {text.imageCounterSeparator} {project.images.length}
+              {activeCaption && (
+                <span className="ml-3 font-normal text-white/70">
+                  — {activeCaption}
+                </span>
+              )}
             </p>
             <button
               type="button"
