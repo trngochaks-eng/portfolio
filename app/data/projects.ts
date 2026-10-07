@@ -544,12 +544,10 @@ const storyById: Record<string, NonNullable<ProjectItem["story"]>> = {
       ENG: [
         "Basic to technical design models completed on schedule and handed over as planned",
         "Models matched the CAD drawings",
-        "The project is complete and now in use"
       ],
       VIE: [
         "Hoàn thành mô hình TKCS–TKKT đúng tiến độ, bàn giao đúng kế hoạch",
         "Mô hình khớp với hồ sơ CAD",
-        "Công trình đã hoàn thành và đưa vào sử dụng"
       ],
     },
   },
