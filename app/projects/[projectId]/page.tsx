@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProjectById } from "../../data/projects";
+import { getProjectById, projects } from "../../data/projects";
 import ProjectDetailClient from "./ProjectDetailClient";
 
 type Props = {
@@ -32,5 +32,15 @@ export default async function ProjectDetailPage({ params }: Props) {
     notFound();
   }
 
-  return <ProjectDetailClient project={project} />;
+  const index = projects.findIndex((item) => item.id === project.id);
+  const toLink = (item?: (typeof projects)[number]) =>
+    item ? { id: item.id, title: item.title } : null;
+
+  return (
+    <ProjectDetailClient
+      project={project}
+      prev={toLink(projects[index - 1])}
+      next={toLink(projects[index + 1])}
+    />
+  );
 }

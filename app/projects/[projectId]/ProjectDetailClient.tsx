@@ -2,66 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import type { Language, ProjectItem } from "../../data/projects";
+import { useEffect, useMemo, useState } from "react";
+import type { ProjectItem } from "../../data/projects";
+import Reveal from "../../components/Reveal";
+import SiteHeader from "../../components/SiteHeader";
+import { useStoredLanguage, useStoredTheme } from "../../lib/preferences";
 
-type ThemeMode = "dark" | "light";
-
-const STORAGE_KEYS = {
-  language: "tnh_portfolio_language",
-  theme: "tnh_portfolio_theme",
-} as const;
-
-const INTERNAL_STORAGE_EVENT = "tnh-storage-change";
-
-function subscribeToStorage(callback: () => void) {
-  if (typeof window === "undefined") return () => {};
-
-  const handleChange = () => callback();
-  window.addEventListener("storage", handleChange);
-  window.addEventListener(INTERNAL_STORAGE_EVENT, handleChange);
-
-  return () => {
-    window.removeEventListener("storage", handleChange);
-    window.removeEventListener(INTERNAL_STORAGE_EVENT, handleChange);
-  };
-}
-
-function getLanguageSnapshot(): Language {
-  if (typeof window === "undefined") return "ENG";
-  const savedLanguage = window.localStorage.getItem(STORAGE_KEYS.language);
-  return savedLanguage === "VIE" ? "VIE" : "ENG";
-}
-
-function getThemeSnapshot(): ThemeMode {
-  if (typeof window === "undefined") return "dark";
-  const savedTheme = window.localStorage.getItem(STORAGE_KEYS.theme);
-  return savedTheme === "light" ? "light" : "dark";
-}
-
-function useStoredLanguage(): Language {
-  return useSyncExternalStore(
-    subscribeToStorage,
-    getLanguageSnapshot,
-    () => "ENG"
-  );
-}
-
-function useStoredTheme(): ThemeMode {
-  return useSyncExternalStore(
-    subscribeToStorage,
-    getThemeSnapshot,
-    () => "dark"
-  );
-}
+type ProjectLink = {
+  id: string;
+  title: { ENG: string; VIE: string };
+};
 
 type Props = {
   project: ProjectItem;
+  prev: ProjectLink | null;
+  next: ProjectLink | null;
 };
 
-export default function ProjectDetailClient({ project }: Props) {
-  const language = useStoredLanguage();
-  const theme = useStoredTheme();
+export default function ProjectDetailClient({ project, prev, next }: Props) {
+  const [language, setLanguage] = useStoredLanguage();
+  const [theme, setTheme] = useStoredTheme();
   const isDark = theme === "dark";
 
   const [startIndex, setStartIndex] = useState(0);
@@ -112,7 +72,12 @@ export default function ProjectDetailClient({ project }: Props) {
 
   const text = {
     ENG: {
-      back: "Back to Portfolio",
+      back: "Back to Projects",
+      prevProject: "Previous project",
+      nextProject: "Next project",
+      ctaTitle: "Interested in working together?",
+      ctaBody: "Let us talk about structural BIM delivery, coordination, and standards for your next project.",
+      ctaButton: "Contact me",
       detail: "Project Detail",
       location: "Location",
       role: "Role",
@@ -134,7 +99,12 @@ export default function ProjectDetailClient({ project }: Props) {
       nextSingleImage: "Next image",
     },
     VIE: {
-      back: "Quay lại Portfolio",
+      back: "Quay lại danh sách dự án",
+      prevProject: "Dự án trước",
+      nextProject: "Dự án tiếp theo",
+      ctaTitle: "Bạn muốn hợp tác?",
+      ctaBody: "Hãy trao đổi về triển khai BIM kết cấu, phối hợp và tiêu chuẩn cho dự án tiếp theo của bạn.",
+      ctaButton: "Liên hệ với tôi",
       detail: "Chi tiết dự án",
       location: "Địa điểm",
       role: "Vai trò",
@@ -216,9 +186,16 @@ export default function ProjectDetailClient({ project }: Props) {
 
   return (
     <main className={`min-h-screen ${pageClasses.page}`}>
+      <SiteHeader
+        language={language}
+        theme={theme}
+        onLanguageChange={setLanguage}
+        onThemeChange={setTheme}
+      />
+
       <section className="mx-auto max-w-7xl px-6 pb-10 pt-8 sm:pt-10">
         <Link
-          href="/"
+          href="/#projects"
           className={`inline-flex min-h-11 items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition ${pageClasses.backButton}`}
         >
           ← {text.back}
@@ -265,7 +242,7 @@ export default function ProjectDetailClient({ project }: Props) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-6">
+      <Reveal as="section" className="mx-auto max-w-7xl px-6 py-6">
         <div>
           <div className="mb-6 flex flex-col gap-2">
             <p className={`text-xs font-bold uppercase tracking-[0.08em] ${pageClasses.subtleText}`}>
@@ -339,9 +316,9 @@ export default function ProjectDetailClient({ project }: Props) {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <section className="mx-auto max-w-7xl px-6 py-12">
+      <Reveal as="section" className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid gap-8 lg:grid-cols-2">
           <div className={`rounded-3xl border p-6 sm:p-8 ${pageClasses.heroPanel}`}>
             <h2 className="text-2xl font-bold tracking-tight">{text.highlights}</h2>
@@ -371,7 +348,53 @@ export default function ProjectDetailClient({ project }: Props) {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
+
+      <Reveal as="section" className="mx-auto max-w-7xl px-6 pb-20">
+        <div className="grid gap-4 sm:grid-cols-2">
+          {prev ? (
+            <Link
+              href={`/projects/${prev.id}`}
+              className={`group rounded-3xl border p-6 transition hover:-translate-y-0.5 ${pageClasses.heroPanel}`}
+            >
+              <p className={`text-xs font-bold uppercase tracking-[0.08em] ${pageClasses.subtleText}`}>
+                ← {text.prevProject}
+              </p>
+              <p className="mt-3 text-lg font-bold leading-snug">{prev.title[language]}</p>
+            </Link>
+          ) : (
+            <div />
+          )}
+          {next ? (
+            <Link
+              href={`/projects/${next.id}`}
+              className={`group rounded-3xl border p-6 text-left transition hover:-translate-y-0.5 sm:text-right ${pageClasses.heroPanel}`}
+            >
+              <p className={`text-xs font-bold uppercase tracking-[0.08em] ${pageClasses.subtleText}`}>
+                {text.nextProject} →
+              </p>
+              <p className="mt-3 text-lg font-bold leading-snug">{next.title[language]}</p>
+            </Link>
+          ) : (
+            <div />
+          )}
+        </div>
+
+        <div className={`mt-6 flex flex-col gap-5 rounded-3xl border p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8 ${pageClasses.heroPanel}`}>
+          <div>
+            <h2 className="text-xl font-bold tracking-tight sm:text-2xl">{text.ctaTitle}</h2>
+            <p className={`mt-2 max-w-2xl leading-7 ${pageClasses.softText}`}>{text.ctaBody}</p>
+          </div>
+          <Link
+            href="/#contact"
+            className={`inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl px-6 py-3 text-sm font-medium transition ${
+              isDark ? "bg-white !text-black hover:bg-zinc-200" : "bg-zinc-900 !text-white hover:bg-zinc-800"
+            }`}
+          >
+            {text.ctaButton}
+          </Link>
+        </div>
+      </Reveal>
 
       {activeImageIndex !== null && (
         <div

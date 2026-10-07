@@ -67,6 +67,7 @@ export const projects: ProjectItem[] = [
         "Split the project into two linked models and one federated model to keep Revit performance and data extraction efficient",
         "Reviewed and coordinated clashes in Navisworks across structure–structure, structure–architecture, and structure–MEP",
         "Owned the project templates, families, BEP naming conventions, and revision control before every issue",
+        "Organised the sheet set by group and sub-group (cover, general notes, foundations and piles, columns and walls, floor plans) so every issued sheet is traceable to the model",
       ],
       VIE: [
         "Quản lý team Revit kết cấu 3 người và trực tiếp triển khai mô hình LOD 350",
@@ -75,6 +76,7 @@ export const projects: ProjectItem[] = [
         "Chia dự án thành 2 file mô hình liên kết và 1 file tổng hợp để giữ hiệu suất Revit và thuận tiện trích xuất dữ liệu",
         "Rà soát và phối hợp xử lý va chạm trên Navisworks (KC–KC, KC–KT, KC–MEP)",
         "Trực tiếp quyết định template, family, quy tắc đặt tên theo BEP và kiểm soát revision trước mỗi lần phát hành",
+        "Tổ chức bộ bản vẽ theo nhóm và nhóm phụ (bìa, ghi chú chung, móng cọc, cột vách, mặt bằng) để mọi sheet phát hành đều truy xuất được về mô hình",
       ],
     },
     tools: ["ETABS", "SAFE", "Revit", "AutoCAD", "Navisworks", "TNH Tool"],
@@ -82,6 +84,8 @@ export const projects: ProjectItem[] = [
       "/projects/project3/6.8_ZZ.png",
       "/projects/project3/6.8_1.png",
       "/projects/project3/6.8_2.png",
+      "/projects/project3/6.8_sheet_1.png",
+      "/projects/project3/6.8_sheet_2.png",
     ],
   },
   {

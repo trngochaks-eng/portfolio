@@ -2,16 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  type MouseEvent,
-  useEffect,
-  useState,
-  useSyncExternalStore,
-} from "react";
-import { projects, type Language } from "./data/projects";
+import { type MouseEvent, useEffect } from "react";
+import { projects } from "./data/projects";
 import { toolGroups, toolPanels, toolProducts, toolStats } from "./data/tools";
-
-type ThemeMode = "dark" | "light";
+import Reveal from "./components/Reveal";
+import SiteHeader from "./components/SiteHeader";
+import { useStoredLanguage, useStoredTheme } from "./lib/preferences";
 
 type ContentItem = {
   nav: {
@@ -95,13 +91,6 @@ type ContentSchema = {
   ENG: ContentItem;
   VIE: ContentItem;
 };
-
-const STORAGE_KEYS = {
-  language: "tnh_portfolio_language",
-  theme: "tnh_portfolio_theme",
-} as const;
-
-const INTERNAL_STORAGE_EVENT = "tnh-storage-change";
 
 const CV_FILES = [
   {
@@ -336,73 +325,9 @@ const content: ContentSchema = {
   },
 };
 
-function subscribeToStorage(callback: () => void) {
-  if (typeof window === "undefined") return () => {};
-
-  const handleChange = () => callback();
-  window.addEventListener("storage", handleChange);
-  window.addEventListener(INTERNAL_STORAGE_EVENT, handleChange);
-
-  return () => {
-    window.removeEventListener("storage", handleChange);
-    window.removeEventListener(INTERNAL_STORAGE_EVENT, handleChange);
-  };
-}
-
-function emitStorageChange() {
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new Event(INTERNAL_STORAGE_EVENT));
-  }
-}
-
-function getLanguageSnapshot(): Language {
-  if (typeof window === "undefined") return "ENG";
-  const savedLanguage = window.localStorage.getItem(STORAGE_KEYS.language);
-  return savedLanguage === "VIE" ? "VIE" : "ENG";
-}
-
-function getThemeSnapshot(): ThemeMode {
-  if (typeof window === "undefined") return "dark";
-  const savedTheme = window.localStorage.getItem(STORAGE_KEYS.theme);
-  return savedTheme === "light" ? "light" : "dark";
-}
-
-function useStoredLanguage(): readonly [Language, (value: Language) => void] {
-  const language = useSyncExternalStore(
-    subscribeToStorage,
-    getLanguageSnapshot,
-    () => "ENG" as Language
-  );
-
-  const setLanguage = (value: Language) => {
-    if (typeof window === "undefined") return;
-    window.localStorage.setItem(STORAGE_KEYS.language, value);
-    emitStorageChange();
-  };
-
-  return [language, setLanguage] as const;
-}
-
-function useStoredTheme(): readonly [ThemeMode, (value: ThemeMode) => void] {
-  const theme = useSyncExternalStore(
-    subscribeToStorage,
-    getThemeSnapshot,
-    () => "dark" as ThemeMode
-  );
-
-  const setTheme = (value: ThemeMode) => {
-    if (typeof window === "undefined") return;
-    window.localStorage.setItem(STORAGE_KEYS.theme, value);
-    emitStorageChange();
-  };
-
-  return [theme, setTheme] as const;
-}
-
 export default function Home() {
   const [language, setLanguage] = useStoredLanguage();
   const [theme, setTheme] = useStoredTheme();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const t = content[language];
   const isDark = theme === "dark";
@@ -448,184 +373,16 @@ export default function Home() {
     imageFrame: isDark ? "bg-zinc-900/60" : "bg-zinc-50",
   };
 
-  const closeMobileMenu = () => setMobileMenuOpen(false);
-
   return (
     <main className={`min-h-screen ${themeClasses.page}`}>
-      <header
-        className={`sticky top-0 z-50 border-b backdrop-blur ${themeClasses.header}`}
-      >
-        <div className="mx-auto flex max-w-7xl items-center px-6 py-4">
-          <a
-            href="#home"
-            onClick={closeMobileMenu}
-            className={`text-sm font-bold tracking-[0.14em] ${
-              isDark ? "text-zinc-300" : "text-zinc-800"
-            }`}
-          >
-            TNH
-          </a>
+      <SiteHeader
+        language={language}
+        theme={theme}
+        onLanguageChange={setLanguage}
+        onThemeChange={setTheme}
+      />
 
-          <nav className="ml-12 hidden gap-6 md:flex">
-            <a href="#home" className={`text-sm transition ${themeClasses.navText}`}>
-              {t.nav.home}
-            </a>
-            <a href="#about" className={`text-sm transition ${themeClasses.navText}`}>
-              {t.nav.about}
-            </a>
-            <a href="#skills" className={`text-sm transition ${themeClasses.navText}`}>
-              {t.nav.skills}
-            </a>
-            <a href="#projects" className={`text-sm transition ${themeClasses.navText}`}>
-              {t.nav.projects}
-            </a>
-            <a href="#tools" className={`text-sm transition ${themeClasses.navText}`}>
-              {t.nav.tools}
-            </a>
-            <a href="#contact" className={`text-sm transition ${themeClasses.navText}`}>
-              {t.nav.contact}
-            </a>
-          </nav>
-
-          <div className="ml-auto hidden items-center gap-3 md:flex">
-            <div
-              className={`flex items-center rounded-full border p-1 ${themeClasses.switchBase}`}
-            >
-              <button
-                type="button"
-                onClick={() => setLanguage("ENG")}
-                aria-pressed={language === "ENG"}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
-                  language === "ENG" ? themeClasses.switchActive : ""
-                }`}
-              >
-                ENG
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage("VIE")}
-                aria-pressed={language === "VIE"}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
-                  language === "VIE" ? themeClasses.switchActive : ""
-                }`}
-              >
-                VIE
-              </button>
-            </div>
-
-            <div
-              className={`flex items-center rounded-full border p-1 ${themeClasses.switchBase}`}
-            >
-              <button
-                type="button"
-                onClick={() => setTheme("light")}
-                aria-label="Light mode"
-                aria-pressed={theme === "light"}
-                title="Light mode"
-                className={`rounded-full px-3 py-1 text-sm font-semibold transition ${
-                  theme === "light" ? themeClasses.switchActive : ""
-                }`}
-              >
-                ☀
-              </button>
-              <button
-                type="button"
-                onClick={() => setTheme("dark")}
-                aria-label="Dark mode"
-                aria-pressed={theme === "dark"}
-                title="Dark mode"
-                className={`rounded-full px-3 py-1 text-sm font-semibold transition ${
-                  theme === "dark" ? themeClasses.switchActive : ""
-                }`}
-              >
-                ☾
-              </button>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            aria-label="Toggle mobile menu"
-            aria-expanded={mobileMenuOpen}
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className={`ml-auto inline-flex items-center justify-center rounded-xl border px-3 py-2 text-sm md:hidden ${themeClasses.switchBase}`}
-          >
-            {mobileMenuOpen ? "✕" : "☰"}
-          </button>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className={`border-t md:hidden ${themeClasses.mobilePanel} ${themeClasses.border}`}>
-            <div className="mx-auto max-w-7xl px-6 py-4">
-              <nav className="flex flex-col gap-3">
-                <a href="#home" onClick={closeMobileMenu} className={`text-sm transition ${themeClasses.navText}`}>{t.nav.home}</a>
-                <a href="#about" onClick={closeMobileMenu} className={`text-sm transition ${themeClasses.navText}`}>{t.nav.about}</a>
-                <a href="#skills" onClick={closeMobileMenu} className={`text-sm transition ${themeClasses.navText}`}>{t.nav.skills}</a>
-                <a href="#projects" onClick={closeMobileMenu} className={`text-sm transition ${themeClasses.navText}`}>{t.nav.projects}</a>
-                <a href="#tools" onClick={closeMobileMenu} className={`text-sm transition ${themeClasses.navText}`}>{t.nav.tools}</a>
-                <a href="#contact" onClick={closeMobileMenu} className={`text-sm transition ${themeClasses.navText}`}>{t.nav.contact}</a>
-              </nav>
-
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <div className={`flex items-center rounded-full border p-1 ${themeClasses.switchBase}`}>
-                  <button
-                    type="button"
-                    onClick={() => setLanguage("ENG")}
-                    aria-pressed={language === "ENG"}
-                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
-                      language === "ENG" ? themeClasses.switchActive : ""
-                    }`}
-                  >
-                    ENG
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setLanguage("VIE")}
-                    aria-pressed={language === "VIE"}
-                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
-                      language === "VIE" ? themeClasses.switchActive : ""
-                    }`}
-                  >
-                    VIE
-                  </button>
-                </div>
-
-                <div className={`flex items-center rounded-full border p-1 ${themeClasses.switchBase}`}>
-                  <button
-                    type="button"
-                    onClick={() => setTheme("light")}
-                    aria-label="Light mode"
-                    aria-pressed={theme === "light"}
-                    title="Light mode"
-                    className={`rounded-full px-3 py-1 text-sm font-semibold transition ${
-                      theme === "light" ? themeClasses.switchActive : ""
-                    }`}
-                  >
-                    ☀
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTheme("dark")}
-                    aria-label="Dark mode"
-                    aria-pressed={theme === "dark"}
-                    title="Dark mode"
-                    className={`rounded-full px-3 py-1 text-sm font-semibold transition ${
-                      theme === "dark" ? themeClasses.switchActive : ""
-                    }`}
-                  >
-                    ☾
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
-
-      <section
-        id="home"
-        className={`animate-fade-up border-b ${themeClasses.border}`}
-      >
+      <section id="home" className={`border-b ${themeClasses.border}`}>
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-2 md:items-center md:py-32">
           <div>
             <p className={`mb-4 text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
@@ -691,7 +448,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="animate-fade-up mx-auto max-w-6xl px-6 py-20 [animation-delay:120ms]">
+      <Reveal as="section" id="about" className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid gap-8 md:grid-cols-[180px_1fr] md:gap-12">
           <div>
             <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
@@ -704,9 +461,9 @@ export default function Home() {
             <p className="max-w-none text-left leading-8 md:text-justify">{t.about.body}</p>
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <section id="skills" className={`animate-fade-up ${themeClasses.altSection} [animation-delay:180ms]`}>
+      <Reveal as="section" id="skills" className={themeClasses.altSection}>
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
             {t.skills.label}
@@ -747,9 +504,9 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <section id="projects" className="animate-fade-up mx-auto max-w-6xl px-6 py-20 [animation-delay:240ms]">
+      <Reveal as="section" id="projects" className="mx-auto max-w-6xl px-6 py-20">
         <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
           {t.projects.label}
         </p>
@@ -760,7 +517,8 @@ export default function Home() {
 
         <div className="mt-10 space-y-10">
           {projects.map((project) => (
-            <article
+            <Reveal
+              as="article"
               key={project.id}
               className={`rounded-4xl p-6 transition duration-300 ${themeClasses.card} ${themeClasses.cardHover}`}
             >
@@ -847,12 +605,12 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </article>
+            </Reveal>
           ))}
         </div>
-      </section>
+      </Reveal>
 
-      <section id="tools" className={`animate-fade-up ${themeClasses.altSection}`}>
+      <Reveal as="section" id="tools" className={themeClasses.altSection}>
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
             {t.toolsSection.label}
@@ -995,9 +753,9 @@ export default function Home() {
             </figcaption>
           </figure>
         </div>
-      </section>
+      </Reveal>
 
-      <section id="contact" className={`animate-fade-up border-t ${themeClasses.border} [animation-delay:300ms]`}>
+      <Reveal as="section" id="contact" className={`border-t ${themeClasses.border}`}>
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
             {t.contact.label}
@@ -1074,7 +832,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       <footer className={`border-t ${themeClasses.border}`}>
         <div className={`mx-auto flex max-w-6xl flex-col gap-3 px-6 py-8 text-sm md:flex-row md:items-center md:justify-between ${themeClasses.footerText}`}>
