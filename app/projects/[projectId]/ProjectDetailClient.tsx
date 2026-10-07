@@ -73,6 +73,9 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
   const text = {
     ENG: {
       back: "Back to Projects",
+      challenge: "Challenge",
+      approach: "Approach",
+      result: "Result",
       prevProject: "Previous project",
       nextProject: "Next project",
       ctaTitle: "Interested in working together?",
@@ -100,6 +103,9 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
     },
     VIE: {
       back: "Quay lại danh sách dự án",
+      challenge: "Thách thức",
+      approach: "Cách làm",
+      result: "Kết quả",
       prevProject: "Dự án trước",
       nextProject: "Dự án tiếp theo",
       ctaTitle: "Bạn muốn hợp tác?",
@@ -184,6 +190,14 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
     );
   };
 
+  const storyCards = project.story
+    ? [
+        { key: "challenge", title: text.challenge, items: [project.story.challenge[language]] },
+        { key: "approach", title: text.approach, items: project.story.approach[language] },
+        { key: "result", title: text.result, items: project.story.result[language] },
+      ]
+    : [];
+
   const activeCaption =
     activeImageIndex === null
       ? undefined
@@ -246,6 +260,36 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
           </dl>
         </div>
       </section>
+
+      {storyCards.length > 0 && (
+        <Reveal as="section" className="mx-auto max-w-7xl px-6 py-6">
+          <div className="grid gap-5 lg:grid-cols-3">
+            {storyCards.map((card, index) => (
+              <div
+                key={card.key}
+                className={`rounded-3xl border p-6 sm:p-8 ${pageClasses.heroPanel}`}
+              >
+                <p className={`text-xs font-bold uppercase tracking-[0.08em] ${pageClasses.subtleText}`}>
+                  0{index + 1}
+                </p>
+                <h2 className="mt-2 text-2xl font-bold tracking-tight">{card.title}</h2>
+                {card.items.length === 1 ? (
+                  <p className={`mt-5 leading-8 ${pageClasses.bodyText}`}>{card.items[0]}</p>
+                ) : (
+                  <ul className={`mt-5 space-y-3 ${pageClasses.bodyText}`}>
+                    {card.items.map((item) => (
+                      <li key={item} className="flex gap-3 leading-7">
+                        <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-70" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      )}
 
       <Reveal as="section" className="mx-auto max-w-7xl px-6 py-6">
         <div>

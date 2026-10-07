@@ -23,6 +23,11 @@ export type ProjectItem = {
   tools: string[];
   images: string[];
   captions?: LocalizedText[];
+  story?: {
+    challenge: LocalizedText;
+    approach: { ENG: string[]; VIE: string[] };
+    result: { ENG: string[]; VIE: string[] };
+  };
 };
 
 const THU_THIEM_LOCATION: LocalizedText = {
@@ -464,9 +469,100 @@ const captionsById: Record<string, LocalizedText[]> = {
   ],
 };
 
+const storyById: Record<string, NonNullable<ProjectItem["story"]>> = {
+  project3: {
+    challenge: { ENG: "Architectural and MEP designs changed continuously while structural documentation had to be issued in urgent phases for site works.", VIE: "Kiến trúc và MEP liên tục thay đổi trong khi hồ sơ kết cấu phải phát hành gấp theo từng đợt phục vụ thi công ngoài công trường." },
+    approach: {
+      ENG: [
+        "Split the model into two linked files and one federated file so Revit stayed responsive on a 153,811.8 m² project",
+        "Set the templates, families and BEP naming rules for the whole team",
+        "Automated repetitive documentation work with in-house TNH Tool commands",
+        "Held regular coordination meetings and clash reviews with architecture and MEP"
+      ],
+      VIE: [
+        "Chia model thành 2 file liên kết và 1 file tổng hợp để Revit chạy ổn định trên dự án 153.811,8 m²",
+        "Thiết lập template, family và quy tắc đặt tên theo BEP cho cả team",
+        "Tự động hóa công việc hồ sơ lặp lại bằng các lệnh TNH Tool tự phát triển",
+        "Họp phối hợp và rà soát clash định kỳ với kiến trúc và MEP"
+      ],
+    },
+    result: {
+      ENG: [
+        "Documentation issued on schedule, phase by phase",
+        "Plans, sections, schedules and pile coordinates taken directly from the model",
+        "A lighter model that runs more smoothly for the team",
+        "Documentation accepted by the client and consultants"
+      ],
+      VIE: [
+        "Phát hành hồ sơ đúng tiến độ theo từng đợt",
+        "Mặt bằng, mặt cắt, bảng thống kê và tọa độ cọc lấy trực tiếp từ mô hình",
+        "Model gọn hơn, team làm việc mượt hơn",
+        "Hồ sơ được chủ đầu tư và các đơn vị tư vấn chấp thuận"
+      ],
+    },
+  },
+  project4: {
+    challenge: { ENG: "The design kept changing throughout basic design, and the structural model had to follow every change.", VIE: "Thiết kế liên tục thay đổi trong suốt giai đoạn TKCS, mô hình kết cấu phải bám theo từng thay đổi." },
+    approach: {
+      ENG: [
+        "Represented the structural consultant in BIM meetings with the client and other consultants",
+        "Contributed to the BIM Execution Plan (BEP)",
+        "Resolved cross-discipline conflicts between structure, architecture and MEP",
+        "Exported IFC models for submission and coordination"
+      ],
+      VIE: [
+        "Đại diện tư vấn kết cấu tham gia họp BIM với chủ đầu tư và các đơn vị tư vấn",
+        "Đóng góp xây dựng BIM Execution Plan (BEP)",
+        "Giải quyết xung đột liên bộ môn giữa kết cấu, kiến trúc và MEP",
+        "Xuất mô hình IFC để nộp hồ sơ và phối hợp"
+      ],
+    },
+    result: {
+      ENG: [
+        "BEP agreed with the client",
+        "IFC and model submissions delivered on time",
+        "Conflicts reduced before moving into the next design stage"
+      ],
+      VIE: [
+        "BEP được chủ đầu tư thống nhất",
+        "Nộp IFC và mô hình đúng hạn",
+        "Giảm xung đột trước khi sang giai đoạn thiết kế tiếp theo"
+      ],
+    },
+  },
+  project7: {
+    challenge: { ENG: "The team did not yet model in a unified way, ran into Revit technical issues, and the schedule was tight.", VIE: "Team chưa thống nhất cách dựng model, gặp vướng mắc kỹ thuật Revit và tiến độ triển khai gấp." },
+    approach: {
+      ENG: [
+        "Authored the Revit templates and project families used by the whole team",
+        "Supported the team and resolved modelling and implementation issues",
+        "Guided consistent LOD 300–350 delivery from basic to technical design"
+      ],
+      VIE: [
+        "Trực tiếp xây dựng Revit template và family dự án cho cả team",
+        "Hỗ trợ team, giải đáp vướng mắc về mô hình và triển khai",
+        "Định hướng triển khai nhất quán LOD 300–350 từ TKCS đến TKKT"
+      ],
+    },
+    result: {
+      ENG: [
+        "The whole team worked from shared templates and families",
+        "Basic to technical design completed on schedule",
+        "Team members worked more independently"
+      ],
+      VIE: [
+        "Cả team dùng chung template và family",
+        "Hoàn thành TKCS–TKKT đúng tiến độ",
+        "Các thành viên làm việc độc lập tốt hơn"
+      ],
+    },
+  },
+};
+
 export const projects: ProjectItem[] = rawProjects.map((project) => ({
   ...project,
   captions: captionsById[project.id],
+  story: storyById[project.id],
 }));
 
 export function getProjectById(id: string) {
