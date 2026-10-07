@@ -385,19 +385,23 @@ const rawProjects: ProjectItem[] = [
     },
     lod: "LOD 350",
     description: {
-      ENG: "Carried the structure from analysis to model: performed structural analysis and design in ETABS and SAFE, then built the coordinated LOD 350 Revit model and issued construction documentation through project completion.",
-      VIE: "Thực hiện xuyên suốt từ tính toán đến mô hình: phân tích, thiết kế kết cấu bằng ETABS và SAFE, sau đó dựng mô hình Revit LOD 350 và phát hành hồ sơ thi công đến khi công trình hoàn thành.",
+      ENG: "Carried the structure from analysis to model: performed structural analysis and design in ETABS and SAFE, then built the coordinated LOD 350 Revit model including reinforcement, and issued construction drawings and rebar schedules directly from the model through project completion.",
+      VIE: "Thực hiện xuyên suốt từ tính toán đến mô hình: phân tích, thiết kế kết cấu bằng ETABS và SAFE, sau đó dựng mô hình Revit LOD 350 bao gồm cốt thép, và phát hành bản vẽ thi công, bảng thống kê thép trực tiếp từ mô hình đến khi công trình hoàn thành.",
     },
     highlights: {
       ENG: [
         "Performed structural analysis and design using ETABS and SAFE",
         "Converted approved structural calculations into a coordinated LOD 350 Revit model and construction documentation",
+        "Modelled reinforcement for the frame and foundations in Revit",
+        "Issued beam plans, foundation plans and footing details, and rebar bending schedules directly from the model",
         "Participated in coordination meetings with the client and other design consultants to update calculations and drawings",
         "Supported structural design coordination through construction completion",
       ],
       VIE: [
         "Trực tiếp phân tích và tính toán kết cấu bằng ETABS, SAFE",
         "Triển khai kết quả tính toán thành mô hình Revit LOD 350 và hồ sơ thi công đồng bộ",
+        "Dựng cốt thép khung và móng trong Revit",
+        "Phát hành mặt bằng dầm, mặt bằng móng, chi tiết móng và bảng thống kê thép trực tiếp từ mô hình",
         "Họp phối hợp với Chủ đầu tư và các đơn vị tư vấn để cập nhật tính toán, bản vẽ",
         "Theo sát thiết kế kết cấu đến khi công trình hoàn thành thi công",
       ],
