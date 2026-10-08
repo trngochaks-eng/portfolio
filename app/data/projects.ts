@@ -62,8 +62,8 @@ const rawProjects: ProjectItem[] = [
     },
     lod: "LOD 350",
     description: {
-      ENG: "Led a three-person structural Revit team while directly developing and managing the model from concept design through construction documentation. Coordinated structural updates with architectural and MEP consultants and issued phased construction packages for site works.",
-      VIE: "Quản lý team Revit kết cấu 3 người, đồng thời trực tiếp dựng và quản lý mô hình từ TKYT đến TKTC. Phối hợp với kiến trúc, MEP để cập nhật thiết kế kết cấu và phát hành hồ sơ thi công theo từng giai đoạn, hạng mục ngoài công trường.",
+      ENG: "Led a three-person structural Revit team and owned the BIM standards and issue approval from concept design through construction documentation.",
+      VIE: "Dẫn dắt team Revit kết cấu 3 người, chịu trách nhiệm tiêu chuẩn BIM và chốt phát hành từ TKYT đến TKTC.",
     },
     highlights: {
       ENG: [
@@ -120,8 +120,8 @@ const rawProjects: ProjectItem[] = [
     },
     lod: "LOD 300",
     description: {
-      ENG: "Led the structural BIM team and represented the structural design consultant in BIM meetings with the client and other consultants. Contributed to developing the BIM Execution Plan and resolved coordination issues during basic design delivery.",
-      VIE: "Quản lý team BIM kết cấu và đại diện đơn vị tư vấn thiết kế kết cấu tham gia họp BIM với Chủ đầu tư cùng các đơn vị tư vấn. Tham gia xây dựng BEP và giải quyết các vướng mắc phối hợp trong quá trình triển khai TKCS.",
+      ENG: "Represented the structural consultant in BIM coordination with the client and other consultants during basic design.",
+      VIE: "Đại diện tư vấn kết cấu trong phối hợp BIM với chủ đầu tư và các đơn vị tư vấn ở giai đoạn TKCS.",
     },
     highlights: {
       ENG: [
@@ -173,8 +173,8 @@ const rawProjects: ProjectItem[] = [
     },
     lod: "LOD 350",
     description: {
-      ENG: "Led the structural Revit team while directly developing and managing the model through construction documentation. Maintained coordinated structural documentation produced directly from Revit.",
-      VIE: "Quản lý team Revit kết cấu, đồng thời trực tiếp dựng và quản lý mô hình đến giai đoạn TKTC. Kiểm soát hồ sơ kết cấu được phối hợp và trích xuất trực tiếp từ Revit.",
+      ENG: "Led the structural Revit team and issued construction documentation directly from the model.",
+      VIE: "Dẫn dắt team Revit kết cấu và phát hành hồ sơ thi công trực tiếp từ mô hình.",
     },
     highlights: {
       ENG: [
@@ -225,8 +225,8 @@ const rawProjects: ProjectItem[] = [
     },
     lod: "LOD 300",
     description: {
-      ENG: "Led the structural Revit team while directly developing and managing the basic design model. Established a consistent BIM structure for coordinated structural design delivery.",
-      VIE: "Quản lý team Revit kết cấu, đồng thời trực tiếp dựng và quản lý mô hình ở giai đoạn TKCS. Thiết lập cấu trúc BIM nhất quán để phối hợp và triển khai thiết kế kết cấu.",
+      ENG: "Led the structural Revit team and set up a consistent BIM structure for basic design.",
+      VIE: "Dẫn dắt team Revit kết cấu và thiết lập cấu trúc BIM nhất quán cho giai đoạn TKCS.",
     },
     highlights: {
       ENG: [
@@ -280,8 +280,8 @@ const rawProjects: ProjectItem[] = [
     },
     lod: "LOD 300–350",
     description: {
-      ENG: "Led the structural Revit team from basic through technical design. Set up the project Revit templates and families, supported the team on modeling and implementation issues, and kept LOD 300–350 delivery consistent across the project.",
-      VIE: "Quản lý team Revit kết cấu từ giai đoạn TKCS đến TKKT. Trực tiếp xây dựng template, family của dự án, hỗ trợ team giải quyết vướng mắc về mô hình và triển khai, bảo đảm LOD 300–350 nhất quán.",
+      ENG: "Led the structural Revit team and set the templates and families the whole team worked from.",
+      VIE: "Dẫn dắt team Revit kết cấu và xây dựng template, family dùng chung cho cả team.",
     },
     highlights: {
       ENG: [
@@ -333,8 +333,8 @@ const rawProjects: ProjectItem[] = [
     },
     lod: "LOD 300–350",
     description: {
-      ENG: "Directly developed the structural Revit models from CAD drawings throughout the basic and technical design stages. The project was organized into three Revit files: a 4K kindergarten model, a 10K primary school model, and a federated model combining both buildings into the complete Wellspring School development.",
-      VIE: "Trực tiếp dựng mô hình Revit kết cấu từ hồ sơ CAD xuyên suốt giai đoạn TKCS đến TKKT. Dự án được tổ chức thành 3 file Revit: mô hình Trường Mầm non 4K, mô hình Trường Tiểu học 10K và file tổng hợp liên kết hai mô hình thành một khối Trường Wellspring hoàn chỉnh.",
+      ENG: "Modelled two school buildings from CAD drawings and combined them into one federated structural model.",
+      VIE: "Dựng mô hình kết cấu hai công trình trường học từ hồ sơ CAD và ghép thành một mô hình tổng hợp.",
     },
     highlights: {
       ENG: [
@@ -474,16 +474,12 @@ const storyById: Record<string, NonNullable<ProjectItem["story"]>> = {
     challenge: { ENG: "Architectural and MEP designs kept changing, construction documentation had to be issued urgently, and several projects were running in parallel.", VIE: "Kiến trúc và MEP liên tục thay đổi, hồ sơ thi công phải phát hành gấp và nhiều dự án chạy song song." },
     approach: {
       ENG: [
-        "Reused the templates, families and BEP naming rules built on Lot 6.8",
-        "Organised the model into two linked files and one federated file",
-        "Automated repetitive documentation work with in-house TNH Tool commands",
-        "Held coordination meetings with architecture and MEP for every round of changes"
+        "Applied the Lot 6.8 BIM standards (templates, naming rules and model split) so the team could start immediately",
+        "Used TNH Tool to speed up repetitive construction documentation"
       ],
       VIE: [
-        "Dùng lại template, family và quy tắc đặt tên theo BEP đã xây dựng ở Lô 6.8",
-        "Tổ chức mô hình thành 2 file liên kết và 1 file tổng hợp",
-        "Tự động hóa công việc hồ sơ lặp lại bằng các lệnh TNH Tool tự phát triển",
-        "Họp phối hợp với kiến trúc và MEP cho từng đợt thay đổi"
+        "Áp dụng chuẩn BIM của Lô 6.8 (template, quy tắc đặt tên, cách chia model) để team bắt tay ngay",
+        "Dùng TNH Tool để tăng tốc phần hồ sơ thi công lặp lại"
       ],
     },
     result: {
@@ -501,16 +497,12 @@ const storyById: Record<string, NonNullable<ProjectItem["story"]>> = {
     challenge: { ENG: "Architectural and MEP designs kept changing while several projects were running in parallel.", VIE: "Kiến trúc và MEP liên tục thay đổi trong khi nhiều dự án chạy song song." },
     approach: {
       ENG: [
-        "Reused the templates, families and BEP naming rules built on Lot 6.8",
-        "Organised the model into two linked files and one federated file",
-        "Automated repetitive documentation work with in-house TNH Tool commands",
-        "Held coordination meetings with architecture and MEP for every round of changes"
+        "Applied the Lot 6.8 BIM standards (templates, naming rules and model split) from day one",
+        "Updated the model after each coordination round with architecture and MEP"
       ],
       VIE: [
-        "Dùng lại template, family và quy tắc đặt tên theo BEP đã xây dựng ở Lô 6.8",
-        "Tổ chức mô hình thành 2 file liên kết và 1 file tổng hợp",
-        "Tự động hóa công việc hồ sơ lặp lại bằng các lệnh TNH Tool tự phát triển",
-        "Họp phối hợp với kiến trúc và MEP cho từng đợt thay đổi"
+        "Áp dụng chuẩn BIM của Lô 6.8 (template, quy tắc đặt tên, cách chia model) ngay từ đầu",
+        "Cập nhật mô hình sau mỗi đợt phối hợp với kiến trúc và MEP"
       ],
     },
     result: {
@@ -557,12 +549,14 @@ const storyById: Record<string, NonNullable<ProjectItem["story"]>> = {
       ENG: [
         "Split the model into two linked files and one federated file so Revit stayed responsive on a 153,811.8 m² project",
         "Set the templates, families and BEP naming rules for the whole team",
+        "Organised the sheet set by group and sub-group so every issued sheet traces back to the model",
         "Automated repetitive documentation work with in-house TNH Tool commands",
         "Held regular coordination meetings and clash reviews with architecture and MEP"
       ],
       VIE: [
         "Chia model thành 2 file liên kết và 1 file tổng hợp để Revit chạy ổn định trên dự án 153.811,8 m²",
         "Thiết lập template, family và quy tắc đặt tên theo BEP cho cả team",
+        "Tổ chức bộ bản vẽ theo nhóm và nhóm phụ để mọi sheet phát hành đều truy xuất được về mô hình",
         "Tự động hóa công việc hồ sơ lặp lại bằng các lệnh TNH Tool tự phát triển",
         "Họp phối hợp và rà soát clash định kỳ với kiến trúc và MEP"
       ],
@@ -588,12 +582,14 @@ const storyById: Record<string, NonNullable<ProjectItem["story"]>> = {
       ENG: [
         "Represented the structural consultant in BIM meetings with the client and other consultants",
         "Contributed to the BIM Execution Plan (BEP)",
+        "Split the project into three linked models and one federated model",
         "Resolved cross-discipline conflicts between structure, architecture and MEP",
         "Exported IFC models for submission and coordination"
       ],
       VIE: [
         "Đại diện tư vấn kết cấu tham gia họp BIM với chủ đầu tư và các đơn vị tư vấn",
         "Đóng góp xây dựng BIM Execution Plan (BEP)",
+        "Chia dự án thành 3 file mô hình liên kết và 1 file tổng hợp",
         "Giải quyết xung đột liên bộ môn giữa kết cấu, kiến trúc và MEP",
         "Xuất mô hình IFC để nộp hồ sơ và phối hợp"
       ],

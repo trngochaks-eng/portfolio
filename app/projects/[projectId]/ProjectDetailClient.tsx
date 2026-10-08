@@ -293,14 +293,9 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
 
       <Reveal as="section" className="mx-auto max-w-7xl px-6 py-6">
         <div>
-          <div className="mb-6 flex flex-col gap-2">
-            <p className={`text-xs font-bold uppercase tracking-[0.08em] ${pageClasses.subtleText}`}>
-              {text.gallery}
-            </p>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              {project.title[language]}
-            </h2>
-          </div>
+          <h2 className="mb-6 text-2xl font-bold tracking-tight sm:text-3xl">
+            {text.gallery}
+          </h2>
 
           <div className="mb-5 grid grid-cols-2 items-center gap-3 sm:grid-cols-[1fr_auto_1fr]">
             <button
@@ -375,8 +370,9 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
       </Reveal>
 
       <Reveal as="section" className="mx-auto max-w-7xl px-6 py-12">
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className={`rounded-3xl border p-6 sm:p-8 ${pageClasses.heroPanel}`}>
+        {/* Projects with a challenge/approach/result story already cover their highlights. */}
+        {!project.story && (
+          <div className={`mb-8 rounded-3xl border p-6 sm:p-8 ${pageClasses.heroPanel}`}>
             <h2 className="text-2xl font-bold tracking-tight">{text.highlights}</h2>
 
             <ul className={`mt-6 space-y-4 ${pageClasses.bodyText}`}>
@@ -388,21 +384,22 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
               ))}
             </ul>
           </div>
+        )}
 
-          <div className={`rounded-3xl border p-6 sm:p-8 ${pageClasses.heroPanel}`}>
-            <h2 className="text-2xl font-bold tracking-tight">{text.tools}</h2>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              {project.tools.map((tool) => (
-                <span
-                  key={tool}
-                  className={`rounded-full border px-4 py-2 text-sm font-bold ${pageClasses.chip}`}
-                >
-                  {tool}
-                </span>
-              ))}
-            </div>
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <h2
+            className={`mr-2 text-xs font-bold uppercase tracking-[0.08em] ${pageClasses.subtleText}`}
+          >
+            {text.tools}
+          </h2>
+          {project.tools.map((tool) => (
+            <span
+              key={tool}
+              className={`rounded-full border px-3 py-1 text-xs font-semibold ${pageClasses.chip}`}
+            >
+              {tool}
+            </span>
+          ))}
         </div>
       </Reveal>
 

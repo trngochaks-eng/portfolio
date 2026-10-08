@@ -52,6 +52,7 @@ type ContentItem = {
     toolsLabel: string;
     detailButton: string;
     moreTitle: string;
+    keyResultLabel: string;
   };
   impact: { value: string; label: string }[];
   toolsSection: {
@@ -193,6 +194,7 @@ const content: ContentSchema = {
       toolsLabel: "Tools",
       detailButton: "View Details",
       moreTitle: "More projects",
+      keyResultLabel: "Key result",
     },
     impact: [
       { value: "3", label: "Revit modelers led" },
@@ -283,6 +285,7 @@ const content: ContentSchema = {
       toolsLabel: "Công cụ",
       detailButton: "Xem chi tiết",
       moreTitle: "Các dự án khác",
+      keyResultLabel: "Kết quả nổi bật",
     },
     impact: [
       { value: "3", label: "Thành viên Revit dẫn dắt" },
@@ -591,6 +594,13 @@ export default function Home() {
                       </p>
                     )}
                   </div>
+
+                  {project.story && (
+                    <p className={`mt-5 text-sm leading-7 ${themeClasses.bodyText}`}>
+                      <span className="font-bold">{t.projects.keyResultLabel}:</span>{" "}
+                      {project.story.result[language][0]}
+                    </p>
+                  )}
 
                   <div className="mt-5">
                     <p className="text-sm font-semibold">{t.projects.toolsLabel}</p>
