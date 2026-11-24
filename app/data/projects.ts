@@ -87,11 +87,13 @@ const rawProjects: ProjectItem[] = [
     },
     tools: ["ETABS", "SAFE", "Revit", "AutoCAD", "Navisworks", "TNH Tool"],
     images: [
-      "/projects/project3/6.8_ZZ.png",
+      "/projects/project3/6.8_4.png",
+      "/projects/project3/6.8_5.png",
       "/projects/project3/6.8_1.png",
       "/projects/project3/6.8_2.png",
-      "/projects/project3/6.8_sheet_1.png",
-      "/projects/project3/6.8_sheet_2.png",
+      "/projects/project3/6.8_3.png",
+      "/projects/project3/6.8_6.png",
+      "/projects/project3/6.8_7.png",
     ],
   },
   {
@@ -420,11 +422,13 @@ const rawProjects: ProjectItem[] = [
 
 const captionsById: Record<string, LocalizedText[]> = {
   project3: [
-    { ENG: "Federated structural model: piles, podium and residential towers", VIE: "Mô hình kết cấu tổng hợp: cọc, khối đế và các tòa tháp căn hộ" },
-    { ENG: "Podium levels and pile foundation", VIE: "Các tầng khối đế và hệ móng cọc" },
-    { ENG: "Residential towers with structural elements colour-coded by type", VIE: "Các tòa tháp căn hộ, cấu kiện phân màu theo loại" },
-    { ENG: "Issued sheet set organised by group in the Project Browser", VIE: "Bộ bản vẽ phát hành tổ chức theo nhóm trong Project Browser" },
-    { ENG: "Typical structural floor plan sheet, divided into zones", VIE: "Sheet mặt bằng kết cấu điển hình, chia theo zone" },
+    { ENG: "Federated structural model: four residential towers on a shared podium and pile foundation", VIE: "Mô hình kết cấu tổng hợp: bốn tòa tháp căn hộ trên khối đế và hệ móng cọc dùng chung" },
+    { ENG: "Federated structural model: view from the opposite corner, transfer elements colour-coded", VIE: "Mô hình kết cấu tổng hợp: góc nhìn đối diện, cấu kiện chuyển phân màu" },
+    { ENG: "Linked model 1: basements, podium and pile foundation", VIE: "File liên kết 1: tầng hầm, khối đế và hệ móng cọc" },
+    { ENG: "Linked model 2: tower superstructure above the podium", VIE: "File liên kết 2: kết cấu phần thân các tòa tháp phía trên khối đế" },
+    { ENG: "Tower superstructure: second view", VIE: "Kết cấu phần thân các tòa tháp: góc nhìn thứ hai" },
+    { ENG: "Navisworks Clash Detective: structure–structure (S–S) test at the transfer levels", VIE: "Navisworks Clash Detective: kiểm tra va chạm kết cấu–kết cấu (S–S) tại các tầng chuyển" },
+    { ENG: "Navisworks clash review: reinforcement conflict at a transfer level, located by grid and level", VIE: "Rà soát clash trên Navisworks: xung đột cốt thép tại tầng chuyển, định vị theo trục và cao độ" },
   ],
   project4: [
     { ENG: "Federated structural model: curved tower complex on pile foundation", VIE: "Mô hình kết cấu tổng hợp: cụm tháp cong trên hệ móng cọc" },
