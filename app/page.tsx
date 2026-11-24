@@ -38,7 +38,6 @@ type ContentItem = {
     subtitle: string;
     detailButton: string;
     moreTitle: string;
-    keyResultLabel: string;
   };
   impact: { value: string; label: string }[];
   toolsSection: {
@@ -148,7 +147,6 @@ const content: ContentSchema = {
         "Selected projects showing structural BIM leadership, multidisciplinary coordination, and documentation issued directly from the model.",
       detailButton: "View Details",
       moreTitle: "More projects",
-      keyResultLabel: "Key result",
     },
     impact: [
       { value: "3", label: "Revit modelers led" },
@@ -214,7 +212,6 @@ const content: ContentSchema = {
         "Các dự án tiêu biểu thể hiện năng lực dẫn dắt BIM kết cấu, phối hợp đa bộ môn và phát hành hồ sơ trực tiếp từ mô hình.",
       detailButton: "Xem chi tiết",
       moreTitle: "Các dự án khác",
-      keyResultLabel: "Kết quả nổi bật",
     },
     impact: [
       { value: "3", label: "Thành viên Revit dẫn dắt" },
@@ -425,6 +422,10 @@ export default function Home() {
                     {project.scale ? ` · ${project.scale[language]}` : ""}
                   </p>
 
+                  <p className={`mt-3 leading-7 ${themeClasses.softText}`}>
+                    {project.description[language]}
+                  </p>
+
                   {(project.stage || project.lod) && (
                     <div className="mt-4 flex flex-wrap gap-2">
                       {project.stage && (
@@ -437,17 +438,6 @@ export default function Home() {
                           {project.lod}
                         </span>
                       )}
-                    </div>
-                  )}
-
-                  {project.story && (
-                    <div className={`mt-6 rounded-2xl border p-4 ${themeClasses.linkCard}`}>
-                      <p className={`text-xs font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
-                        {t.projects.keyResultLabel}
-                      </p>
-                      <p className="mt-2 font-semibold leading-7">
-                        {project.story.result[language][0]}
-                      </p>
                     </div>
                   )}
 
