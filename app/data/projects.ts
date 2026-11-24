@@ -360,8 +360,8 @@ const rawProjects: ProjectItem[] = [
     },
     tools: ["Revit", "AutoCAD", "TNH Tool"],
     images: [
-      "/projects/project8/Combie H9_1.png",
       "/projects/project8/Combie H9_2.png",
+      "/projects/project8/Combie H9_1.png",
       "/projects/project8/Combie H9_3.png",
       "/projects/project8/Combie H9_4.png",
       "/projects/project8/Mam non 4K-H9_1.png",
@@ -456,8 +456,8 @@ const captionsById: Record<string, LocalizedText[]> = {
     { ENG: "Frame, core walls and slabs at upper floors", VIE: "Khung, lõi vách và sàn các tầng trên" },
   ],
   project8: [
-    { ENG: "Structural plan view in the combined H9 model", VIE: "Mặt bằng kết cấu trong mô hình tổng hợp H9" },
     { ENG: "Combined H9 model: 3D view, kindergarten and primary school", VIE: "Mô hình tổng hợp H9: góc nhìn 3D, trường mầm non và tiểu học" },
+    { ENG: "Structural plan view in the combined H9 model", VIE: "Mặt bằng kết cấu trong mô hình tổng hợp H9" },
     { ENG: "Combined H9 model: second 3D view", VIE: "Mô hình tổng hợp H9: góc nhìn 3D thứ hai" },
     { ENG: "Combined H9 model: third 3D view", VIE: "Mô hình tổng hợp H9: góc nhìn 3D thứ ba" },
     { ENG: "4K kindergarten model: 3D view", VIE: "Mô hình Trường Mầm non 4K: góc nhìn 3D" },

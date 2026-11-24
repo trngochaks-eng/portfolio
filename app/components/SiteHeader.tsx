@@ -13,9 +13,8 @@ type Props = {
 
 const NAV = [
   { id: "home", ENG: "Home", VIE: "Trang chủ" },
-  { id: "about", ENG: "About", VIE: "Giới thiệu" },
-  { id: "skills", ENG: "Skills", VIE: "Kỹ năng" },
   { id: "projects", ENG: "Projects", VIE: "Dự án" },
+  { id: "about", ENG: "About", VIE: "Giới thiệu" },
   { id: "tools", ENG: "Tools", VIE: "Công cụ" },
   { id: "contact", ENG: "Contact", VIE: "Liên hệ" },
 ] as const;

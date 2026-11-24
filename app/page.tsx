@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { type MouseEvent, useEffect } from "react";
 import { projects } from "./data/projects";
-import { toolGroups, toolPanels, toolProducts, toolStats } from "./data/tools";
+import { toolGroups, toolProducts, toolStats } from "./data/tools";
 import Reveal from "./components/Reveal";
 import SiteHeader from "./components/SiteHeader";
 import { useStoredLanguage, useStoredTheme } from "./lib/preferences";
@@ -13,7 +13,6 @@ type ContentItem = {
   nav: {
     home: string;
     about: string;
-    skills: string;
     projects: string;
     tools: string;
     contact: string;
@@ -31,25 +30,12 @@ type ContentItem = {
     label: string;
     title: string;
     body: string;
-  };
-  skills: {
-    label: string;
-    title: string;
     softwareTitle: string;
-    professionalTitle: string;
   };
   projects: {
     label: string;
     title: string;
     subtitle: string;
-    locationLabel: string;
-    roleLabel: string;
-    scaleLabel: string;
-    periodLabel: string;
-    stageLabel: string;
-    lodLabel: string;
-    typeLabel: string;
-    toolsLabel: string;
     detailButton: string;
     moreTitle: string;
     keyResultLabel: string;
@@ -61,20 +47,11 @@ type ContentItem = {
     subtitle: string;
     groupsTitle: string;
     productsTitle: string;
-    usage: string;
-    license: string;
-    integrations: string;
-    ribbonCaption: string;
-    panelsTitle: string;
-    accountCaption: string;
-    architectureCaption: string;
   };
   contact: {
     label: string;
     title: string;
     subtitle: string;
-    roleTitle: string;
-    roleValue: string;
     availabilityTitle: string;
     availabilityValue: string;
     linksTitle: string;
@@ -136,15 +113,6 @@ const softwareSkills = [
   "IFC",
   "Revit API (C#)",
 ];
-const professionalSkills = [
-  "Structural BIM Team Leadership",
-  "BIM Coordination",
-  "Revit Model Management",
-  "BIM Workflow & Standards Development",
-  "Model & Documentation QA/QC",
-  "Clash Detection & Coordination",
-  "BIM Automation & Tool Development",
-];
 
 const FEATURED_PROJECT_IDS = ["project3", "project4", "project7"];
 
@@ -153,7 +121,6 @@ const content: ContentSchema = {
     nav: {
       home: "Home",
       about: "About",
-      skills: "Skills",
       projects: "Projects",
       tools: "Tools",
       contact: "Contact",
@@ -171,27 +138,14 @@ const content: ContentSchema = {
     about: {
       label: "About",
       title: "About Me",
-      body: "I am a Structural BIM Lead and BIM Coordinator with a structural engineering background and three years of project delivery experience. I lead a three-person Revit team, set the project templates, naming rules and revision control under the BEP, coordinate with architectural and MEP disciplines in Navisworks, and sign off model and documentation quality before every issue. I have worked on Autodesk Construction Cloud, automated routine work with Dynamo and my own Revit API tools, and exported IFC for submission and cross-discipline coordination.",
-    },
-    skills: {
-      label: "Skills",
-      title: "Core Skills",
+      body: "Structural engineer with three years of BIM project delivery. I lead a three-person structural Revit team, own the templates, BEP naming rules and revision control, and sign off model and documentation quality before every issue. I coordinate with architecture and MEP in Navisworks and automate routine work with Dynamo and my own Revit API tools.",
       softwareTitle: "Software",
-      professionalTitle: "Professional Capabilities",
     },
     projects: {
       label: "Projects",
       title: "Selected Project Experience",
       subtitle:
         "Selected projects showing structural BIM leadership, multidisciplinary coordination, and documentation issued directly from the model.",
-      periodLabel: "Period",
-      locationLabel: "Location",
-      roleLabel: "Role",
-      scaleLabel: "Scale",
-      stageLabel: "Stage",
-      lodLabel: "LOD",
-      typeLabel: "Type",
-      toolsLabel: "Tools",
       detailButton: "View Details",
       moreTitle: "More projects",
       keyResultLabel: "Key result",
@@ -200,32 +154,21 @@ const content: ContentSchema = {
       { value: "3", label: "Revit modelers led" },
       { value: "175,000 m²", label: "Largest project delivered" },
       { value: "40+", label: "In-house Revit commands" },
-      { value: "7", label: "Projects delivered" },
+      { value: "7", label: "Projects worked on" },
     ],
     toolsSection: {
       label: "Tools & Automation",
       title: "In-house Revit Tools",
       subtitle:
-        "I design and build my own Revit add-ins (C#, Revit API) to remove repetitive work and enforce BIM standards. The tools run on Revit 2024 and later, connect with Excel and CAD, and are licensed through a server-side license manager.",
+        "I build my own Revit add-ins (C#, Revit API) to remove repetitive work and enforce BIM standards, connected with Excel and CAD.",
       groupsTitle: "TNH Tool – 40+ commands",
       productsTitle: "Related tools",
-      usage:
-        "Used on Lot 6.8, Lot 6.7, Lot C2, Lot C3, My Xuan B1 and WELLSPRING H9, and by staff at other companies.",
-      license: "Server-side license management",
-      integrations: "Excel · CAD",
-      ribbonCaption: "TNH_Tool ribbon in Revit",
-      panelsTitle: "Command panels",
-      accountCaption: "Account window: user sign-in, plan, and server-synced license",
-      architectureCaption:
-        "TNH MCP architecture: AI host → MCP server → TNH Tool → Revit",
     },
     contact: {
       label: "Contact",
       title: "Let's Connect",
       subtitle:
         "Use the links below to discuss professional opportunities or view my profiles and CV.",
-      roleTitle: "Professional Role",
-      roleValue: "Structural BIM Lead | BIM Coordinator",
       availabilityTitle: "Open To",
       availabilityValue:
         "Structural BIM Lead and BIM Coordinator roles with a focus on information management, BIM standards, model QA/QC, multidisciplinary coordination, and BIM automation.",
@@ -244,7 +187,6 @@ const content: ContentSchema = {
     nav: {
       home: "Trang chủ",
       about: "Giới thiệu",
-      skills: "Kỹ năng",
       projects: "Dự án",
       tools: "Công cụ",
       contact: "Liên hệ",
@@ -262,27 +204,14 @@ const content: ContentSchema = {
     about: {
       label: "Giới thiệu",
       title: "Về tôi",
-      body: "Tôi là Structural BIM Lead và BIM Coordinator, có nền tảng kỹ thuật kết cấu cùng 3 năm kinh nghiệm triển khai dự án. Tôi quản lý team Revit 3 người, trực tiếp quyết định template, quy tắc đặt tên và kiểm soát revision theo BEP, phối hợp với bộ môn Kiến trúc và MEP trên Navisworks, đồng thời chịu trách nhiệm chốt chất lượng mô hình và hồ sơ trước mỗi lần phát hành. Tôi đã làm việc trên Autodesk Construction Cloud, tự động hóa công việc lặp lại bằng Dynamo cùng các công cụ Revit API do tôi phát triển, và xuất IFC để nộp hồ sơ, phối hợp giữa các bộ môn.",
-    },
-    skills: {
-      label: "Kỹ năng",
-      title: "Năng lực cốt lõi",
+      body: "Kỹ sư kết cấu với 3 năm kinh nghiệm triển khai dự án BIM. Tôi quản lý team Revit kết cấu 3 người, quyết định template, quy tắc đặt tên theo BEP, kiểm soát revision và chốt chất lượng mô hình, hồ sơ trước mỗi lần phát hành. Tôi phối hợp với Kiến trúc và MEP trên Navisworks, tự động hóa công việc lặp lại bằng Dynamo và các công cụ Revit API tự phát triển.",
       softwareTitle: "Phần mềm",
-      professionalTitle: "Năng lực chuyên môn",
     },
     projects: {
       label: "Dự án",
       title: "Kinh nghiệm dự án thực tế",
       subtitle:
         "Các dự án tiêu biểu thể hiện năng lực dẫn dắt BIM kết cấu, phối hợp đa bộ môn và phát hành hồ sơ trực tiếp từ mô hình.",
-      periodLabel: "Thời gian",
-      locationLabel: "Địa điểm",
-      roleLabel: "Vai trò",
-      scaleLabel: "Quy mô",
-      stageLabel: "Giai đoạn",
-      lodLabel: "LOD",
-      typeLabel: "Loại công việc",
-      toolsLabel: "Công cụ",
       detailButton: "Xem chi tiết",
       moreTitle: "Các dự án khác",
       keyResultLabel: "Kết quả nổi bật",
@@ -291,32 +220,21 @@ const content: ContentSchema = {
       { value: "3", label: "Thành viên Revit dẫn dắt" },
       { value: "175.000 m²", label: "Quy mô dự án lớn nhất" },
       { value: "40+", label: "Lệnh Revit tự phát triển" },
-      { value: "7", label: "Dự án đã triển khai" },
+      { value: "7", label: "Dự án đã tham gia" },
     ],
     toolsSection: {
       label: "Công cụ & Tự động hóa",
       title: "Công cụ Revit tự phát triển",
       subtitle:
-        "Tôi tự thiết kế và lập trình các add-in Revit (C#, Revit API) để loại bỏ công việc lặp lại và đảm bảo tiêu chuẩn BIM. Công cụ chạy trên Revit 2024 trở lên, kết nối với Excel và CAD, và quản lý license trên server.",
+        "Tôi tự lập trình các add-in Revit (C#, Revit API) để loại bỏ công việc lặp lại và đảm bảo tiêu chuẩn BIM, kết nối với Excel và CAD.",
       groupsTitle: "TNH Tool – hơn 40 lệnh",
       productsTitle: "Công cụ liên quan",
-      usage:
-        "Đã áp dụng cho Lô 6.8, Lô 6.7, Lô C2, Lô C3, Mỹ Xuân B1, WELLSPRING H9 và được nhân viên các công ty khác sử dụng.",
-      license: "Quản lý license trên server",
-      integrations: "Excel · CAD",
-      ribbonCaption: "Thanh ribbon TNH_Tool trong Revit",
-      panelsTitle: "Các nhóm lệnh",
-      accountCaption: "Cửa sổ tài khoản: đăng nhập, gói sử dụng và license đồng bộ từ server",
-      architectureCaption:
-        "Kiến trúc TNH MCP: AI → MCP server → TNH Tool → Revit",
     },
     contact: {
       label: "Liên hệ",
       title: "Kết nối với tôi",
       subtitle:
         "Bạn có thể truy cập trực tiếp các kênh liên hệ và hồ sơ của tôi qua nhóm liên kết bên dưới.",
-      roleTitle: "Vai trò chuyên môn",
-      roleValue: "Structural BIM Lead | BIM Coordinator",
       availabilityTitle: "Quan tâm",
       availabilityValue:
         "Các vị trí Structural BIM Lead và BIM Coordinator, tập trung vào quản lý thông tin, tiêu chuẩn BIM, QA/QC mô hình, phối hợp đa bộ môn và tự động hóa BIM.",
@@ -462,63 +380,6 @@ export default function Home() {
         </div>
       </section>
 
-      <Reveal as="section" id="about" className="mx-auto max-w-6xl px-6 py-20">
-        <div className="grid gap-8 md:grid-cols-[180px_1fr] md:gap-12">
-          <div>
-            <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
-              {t.about.label}
-            </p>
-            <h3 className="mt-3 text-3xl font-bold tracking-tight">{t.about.title}</h3>
-          </div>
-
-          <div className={themeClasses.bodyText}>
-            <p className="max-w-none text-left leading-8 md:text-justify">{t.about.body}</p>
-          </div>
-        </div>
-      </Reveal>
-
-      <Reveal as="section" id="skills" className={themeClasses.altSection}>
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
-            {t.skills.label}
-          </p>
-          <h3 className="mt-3 text-3xl font-bold tracking-tight">{t.skills.title}</h3>
-
-          <div className="mt-10 grid gap-8 md:grid-cols-2">
-            <div>
-              <h4 className="text-sm font-bold uppercase tracking-[0.08em]">
-                {t.skills.softwareTitle}
-              </h4>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {softwareSkills.map((skill) => (
-                  <span
-                    key={skill}
-                    className={`rounded-full border px-4 py-2 text-sm transition-transform duration-300 hover:-translate-y-0.5 ${themeClasses.skillTag}`}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold uppercase tracking-[0.08em]">
-                {t.skills.professionalTitle}
-              </h4>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {professionalSkills.map((skill) => (
-                  <span
-                    key={skill}
-                    className={`rounded-full border px-4 py-2 text-sm transition-transform duration-300 hover:-translate-y-0.5 ${themeClasses.skillTag}`}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </Reveal>
 
       <Reveal as="section" id="projects" className="mx-auto max-w-6xl px-6 py-20">
         <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
@@ -550,73 +411,47 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div>
+                <div className="flex flex-col justify-center">
                   <p className={`text-xs font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
-                    {project.type[language]}
+                    {project.period[language]} · {project.type[language]}
                   </p>
 
                   <h4 className="mt-3 text-2xl font-bold tracking-tight">
                     {project.title[language]}
                   </h4>
 
+                  <p className={`mt-3 text-sm leading-7 ${themeClasses.bodyText}`}>
+                    <span className="font-semibold">{project.role[language]}</span>
+                    {project.scale ? ` · ${project.scale[language]}` : ""}
+                  </p>
+
                   {(project.stage || project.lod) && (
                     <div className="mt-4 flex flex-wrap gap-2">
                       {project.stage && (
                         <span className={`rounded-full border px-3 py-1 text-xs font-bold ${themeClasses.skillTag}`}>
-                          {t.projects.stageLabel}: {project.stage[language]}
+                          {project.stage[language]}
                         </span>
                       )}
                       {project.lod && (
                         <span className={`rounded-full border px-3 py-1 text-xs font-bold ${themeClasses.skillTag}`}>
-                          {t.projects.lodLabel}: {project.lod}
+                          {project.lod}
                         </span>
                       )}
                     </div>
                   )}
 
-                  <div className={`mt-5 space-y-3 text-sm ${themeClasses.bodyText}`}>
-                    <p>
-                      <span className="font-bold">{t.projects.periodLabel}:</span>{" "}
-                      {project.period[language]}
-                    </p>
-                    <p>
-                      <span className="font-bold">{t.projects.locationLabel}:</span>{" "}
-                      {project.location[language]}
-                    </p>
-                    <p>
-                      <span className="font-bold">{t.projects.roleLabel}:</span>{" "}
-                      {project.role[language]}
-                    </p>
-                    {project.scale && (
-                      <p>
-                        <span className="font-bold">{t.projects.scaleLabel}:</span>{" "}
-                        {project.scale[language]}
-                      </p>
-                    )}
-                  </div>
-
                   {project.story && (
-                    <p className={`mt-5 text-sm leading-7 ${themeClasses.bodyText}`}>
-                      <span className="font-bold">{t.projects.keyResultLabel}:</span>{" "}
-                      {project.story.result[language][0]}
-                    </p>
+                    <div className={`mt-6 rounded-2xl border p-4 ${themeClasses.linkCard}`}>
+                      <p className={`text-xs font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
+                        {t.projects.keyResultLabel}
+                      </p>
+                      <p className="mt-2 font-semibold leading-7">
+                        {project.story.result[language][0]}
+                      </p>
+                    </div>
                   )}
 
-                  <div className="mt-5">
-                    <p className="text-sm font-semibold">{t.projects.toolsLabel}</p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {project.tools.map((tool) => (
-                        <span
-                          key={tool}
-                          className={`rounded-full border px-3 py-1 text-xs ${themeClasses.skillTag}`}
-                        >
-                          {tool}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-8">
+                  <div className="mt-7">
                     <Link
                       href={`/projects/${project.id}`}
                       className={`inline-flex min-w-[180px] items-center justify-center rounded-xl px-6 py-3 text-sm font-medium transition ${themeClasses.primaryButton}`}
@@ -672,7 +507,36 @@ export default function Home() {
         </div>
       </Reveal>
 
-      <Reveal as="section" id="tools" className={themeClasses.altSection}>
+      <Reveal as="section" id="about" className={themeClasses.altSection}>
+        <div className="mx-auto grid max-w-6xl gap-8 px-6 py-20 md:grid-cols-[180px_1fr] md:gap-12">
+          <div>
+            <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
+              {t.about.label}
+            </p>
+            <h3 className="mt-3 text-3xl font-bold tracking-tight">{t.about.title}</h3>
+          </div>
+
+          <div>
+            <p className={`max-w-3xl leading-8 ${themeClasses.bodyText}`}>{t.about.body}</p>
+
+            <h4 className="mt-8 text-sm font-bold uppercase tracking-[0.08em]">
+              {t.about.softwareTitle}
+            </h4>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {softwareSkills.map((skill) => (
+                <span
+                  key={skill}
+                  className={`rounded-full border px-3 py-1.5 text-sm ${themeClasses.skillTag}`}
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Reveal>
+
+      <Reveal as="section" id="tools">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <p className={`text-sm font-bold uppercase tracking-[0.08em] ${themeClasses.subtleText}`}>
             {t.toolsSection.label}
@@ -691,129 +555,46 @@ export default function Home() {
                 <span className="font-bold">{stat.value}</span> {stat.label[language]}
               </span>
             ))}
-            <span className={`rounded-full border px-4 py-2 text-sm ${themeClasses.skillTag}`}>
-              {t.toolsSection.license}
-            </span>
-            <span className={`rounded-full border px-4 py-2 text-sm ${themeClasses.skillTag}`}>
-              {t.toolsSection.integrations}
-            </span>
-          </div>
-          <p className={`mt-4 text-sm ${themeClasses.softText}`}>{t.toolsSection.usage}</p>
-
-          <figure className={`mt-10 overflow-hidden rounded-3xl ${themeClasses.imageFrame}`}>
-            <Image
-              src="/tools/tnh-ribbon-full.png"
-              alt={t.toolsSection.ribbonCaption}
-              width={1570}
-              height={126}
-              className="h-auto w-full"
-              sizes="(max-width: 1152px) 100vw, 1152px"
-            />
-            <figcaption className={`px-5 py-3 text-xs ${themeClasses.subtleText}`}>
-              {t.toolsSection.ribbonCaption}
-            </figcaption>
-          </figure>
-
-          <h4 className="mt-12 text-sm font-bold uppercase tracking-[0.08em]">
-            {t.toolsSection.panelsTitle}
-          </h4>
-          <div className="mt-5 flex flex-wrap items-start gap-5">
-            {toolPanels.map((panel) => (
-              <figure
-                key={panel.src}
-                className={`max-w-full overflow-hidden rounded-3xl ${themeClasses.imageFrame}`}
-              >
-                <Image
-                  src={panel.src}
-                  alt={panel.title[language]}
-                  width={panel.width}
-                  height={panel.height}
-                  className="h-auto max-w-full"
-                  style={{ width: panel.width }}
-                  sizes={`${panel.width * 2}px`}
-                />
-                <figcaption className={`px-5 py-3 text-xs ${themeClasses.subtleText}`}>
-                  {panel.title[language]}
-                </figcaption>
-              </figure>
-            ))}
           </div>
 
-          <h4 className="mt-12 text-sm font-bold uppercase tracking-[0.08em]">
+          <h4 className="mt-10 text-sm font-bold uppercase tracking-[0.08em]">
             {t.toolsSection.groupsTitle}
           </h4>
-          <div className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {toolGroups.map((group) => (
               <div
                 key={group.title.ENG}
                 className={`rounded-3xl border p-5 ${themeClasses.linkCard}`}
               >
                 <p className="font-semibold">{group.title[language]}</p>
-                <p className={`mt-3 text-sm leading-7 ${themeClasses.bodyText}`}>
+                <p className={`mt-2 text-sm leading-6 ${themeClasses.bodyText}`}>
                   {group.description[language]}
-                </p>
-                <p className={`mt-3 text-xs ${themeClasses.subtleText}`}>
-                  {group.examples[language]}
                 </p>
               </div>
             ))}
           </div>
 
-          <h4 className="mt-12 text-sm font-bold uppercase tracking-[0.08em]">
+          <h4 className="mt-10 text-sm font-bold uppercase tracking-[0.08em]">
             {t.toolsSection.productsTitle}
           </h4>
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
             {toolProducts.map((product) => (
               <div
                 key={product.name}
-                className={`rounded-3xl border p-6 ${themeClasses.linkCard}`}
+                className={`rounded-3xl border p-5 ${themeClasses.linkCard}`}
               >
-                <p className="text-lg font-bold">{product.name}</p>
-                <p className={`mt-1 text-sm ${themeClasses.subtleText}`}>
-                  {product.tagline[language]}
+                <p className="font-bold">
+                  {product.name}
+                  <span className={`ml-2 text-sm font-normal ${themeClasses.subtleText}`}>
+                    {product.tagline[language]}
+                  </span>
                 </p>
-                <p className={`mt-4 text-sm leading-7 ${themeClasses.bodyText}`}>
+                <p className={`mt-2 text-sm leading-6 ${themeClasses.bodyText}`}>
                   {product.description[language]}
                 </p>
-                <ul className={`mt-4 space-y-2 text-sm ${themeClasses.bodyText}`}>
-                  {product.points[language].map((point) => (
-                    <li key={point} className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-70" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
             ))}
           </div>
-
-          <figure className={`mt-8 flex flex-col items-center gap-3 overflow-hidden rounded-3xl p-6 ${themeClasses.imageFrame}`}>
-            <Image
-              src="/tools/tnh-tool-account.png"
-              alt={t.toolsSection.accountCaption}
-              width={434}
-              height={452}
-              className="h-auto w-full max-w-[320px] rounded-2xl"
-              sizes="320px"
-            />
-            <figcaption className={`text-xs ${themeClasses.subtleText}`}>
-              {t.toolsSection.accountCaption}
-            </figcaption>
-          </figure>
-
-          <figure className={`mt-8 overflow-hidden rounded-3xl ${themeClasses.imageFrame}`}>
-            <Image
-              src="/tools/tnh-mcp-architecture.png"
-              alt={t.toolsSection.architectureCaption}
-              width={1700}
-              height={520}
-              className="h-auto w-full bg-white"
-              sizes="(max-width: 1152px) 100vw, 1152px"
-            />
-            <figcaption className={`px-5 py-3 text-xs ${themeClasses.subtleText}`}>
-              {t.toolsSection.architectureCaption}
-            </figcaption>
-          </figure>
         </div>
       </Reveal>
 
@@ -829,12 +610,7 @@ export default function Home() {
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
             <div className={`rounded-4xl p-6 ${themeClasses.card}`}>
-              <h4 className="text-lg font-semibold">{t.contact.roleTitle}</h4>
-              <p className={`mt-3 leading-8 ${themeClasses.bodyText}`}>
-                {t.contact.roleValue}
-              </p>
-
-              <h4 className="mt-6 text-lg font-semibold">
+              <h4 className="text-lg font-semibold">
                 {t.contact.availabilityTitle}
               </h4>
               <p className={`mt-3 leading-8 ${themeClasses.bodyText}`}>
