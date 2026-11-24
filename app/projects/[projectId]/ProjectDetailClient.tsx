@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import type { ProjectItem } from "../../data/projects";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ImageKind, ProjectItem } from "../../data/projects";
 import Reveal from "../../components/Reveal";
 import SiteHeader from "../../components/SiteHeader";
 import { useStoredLanguage, useStoredTheme } from "../../lib/preferences";
@@ -24,22 +24,48 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
   const [theme, setTheme] = useStoredTheme();
   const isDark = theme === "dark";
 
-  const [startIndex, setStartIndex] = useState(0);
-  const [galleryDirection, setGalleryDirection] = useState<
-    "next" | "prev" | null
-  >(null);
+  const [activeKind, setActiveKind] = useState<ImageKind | "all">("all");
   const [activeImageIndex, setActiveImageIndex] = useState<number | null>(null);
+  const activeThumbRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     document.documentElement.lang = language === "VIE" ? "vi" : "en";
   }, [language]);
 
-  const visibleImages = useMemo(() => {
-    return project.images.slice(startIndex, startIndex + 2);
-  }, [project.images, startIndex]);
+  const kindOf = (index: number): ImageKind =>
+    project.imageKinds?.[index] ?? "model";
 
-  const canGoPrev = startIndex > 0;
-  const canGoNext = startIndex + 2 < project.images.length;
+  const kindCounts = useMemo(() => {
+    const counts = new Map<ImageKind, number>();
+    project.images.forEach((_, index) => {
+      const kind = project.imageKinds?.[index] ?? "model";
+      counts.set(kind, (counts.get(kind) ?? 0) + 1);
+    });
+    return counts;
+  }, [project.images, project.imageKinds]);
+
+  // Global indices of the images shown under the current tab.
+  const visibleIndices = useMemo(
+    () =>
+      project.images
+        .map((_, index) => index)
+        .filter(
+          (index) =>
+            activeKind === "all" ||
+            (project.imageKinds?.[index] ?? "model") === activeKind
+        ),
+    [project.images, project.imageKinds, activeKind]
+  );
+
+  const stepImage = (direction: 1 | -1) => {
+    setActiveImageIndex((current) => {
+      if (current === null || visibleIndices.length === 0) return current;
+      const position = visibleIndices.indexOf(current);
+      const nextPosition =
+        (position + direction + visibleIndices.length) % visibleIndices.length;
+      return visibleIndices[nextPosition];
+    });
+  };
 
   useEffect(() => {
     if (activeImageIndex === null) return;
@@ -49,15 +75,9 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
       if (event.key === "Escape") {
         setActiveImageIndex(null);
       } else if (event.key === "ArrowLeft") {
-        setActiveImageIndex((current) =>
-          current === null
-            ? null
-            : (current - 1 + project.images.length) % project.images.length
-        );
+        stepImage(-1);
       } else if (event.key === "ArrowRight") {
-        setActiveImageIndex((current) =>
-          current === null ? null : (current + 1) % project.images.length
-        );
+        stepImage(1);
       }
     };
 
@@ -68,7 +88,17 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeImageIndex, project.images.length]);
+    // stepImage only depends on visibleIndices.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeImageIndex, visibleIndices]);
+
+  useEffect(() => {
+    activeThumbRef.current?.scrollIntoView({
+      block: "nearest",
+      inline: "center",
+      behavior: "smooth",
+    });
+  }, [activeImageIndex]);
 
   const text = {
     ENG: {
@@ -91,11 +121,17 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
       lod: "Level of Development",
       highlights: "Project Highlights",
       tools: "Tools",
-      prevImage: "Previous image",
-      nextImage: "Next image",
-      imageCounter: "Images",
+      imageCounter: "Image",
       imageCounterSeparator: "of",
+      imagesCount: "images",
       gallery: "Project Gallery",
+      galleryFilter: "Filter gallery",
+      kinds: {
+        all: "All",
+        model: "3D model",
+        coordination: "Coordination",
+        documentation: "Documentation",
+      },
       openImage: "Open image",
       closeViewer: "Close image viewer",
       previousSingleImage: "Previous image",
@@ -121,11 +157,17 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
       lod: "Mức độ phát triển",
       highlights: "Điểm chính",
       tools: "Công cụ",
-      prevImage: "Ảnh trước",
-      nextImage: "Ảnh tiếp",
       imageCounter: "Ảnh",
       imageCounterSeparator: "/",
+      imagesCount: "ảnh",
       gallery: "Hình ảnh dự án",
+      galleryFilter: "Lọc hình ảnh",
+      kinds: {
+        all: "Tất cả",
+        model: "Mô hình 3D",
+        coordination: "Phối hợp",
+        documentation: "Hồ sơ",
+      },
       openImage: "Mở ảnh",
       closeViewer: "Đóng trình xem ảnh",
       previousSingleImage: "Ảnh trước",
@@ -138,7 +180,6 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
     softText: isDark ? "text-zinc-400" : "text-zinc-600",
     bodyText: isDark ? "text-zinc-300" : "text-zinc-700",
     subtleText: isDark ? "text-zinc-400" : "text-zinc-600",
-    surface: isDark ? "bg-white/[0.03]" : "bg-white",
     heroPanel: isDark
       ? "border-white/10 bg-gradient-to-br from-white/[0.055] to-transparent"
       : "border-zinc-200 bg-gradient-to-br from-white to-zinc-100/70",
@@ -154,12 +195,16 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
     backButton: isDark
       ? "bg-white/5 text-zinc-200 hover:bg-white/10"
       : "bg-zinc-100 text-zinc-800 hover:bg-zinc-200",
-    galleryButton: isDark
-      ? "border-white/15 bg-white text-zinc-950 hover:bg-zinc-200 disabled:border-white/10 disabled:bg-white/5 disabled:text-zinc-600"
-      : "border-zinc-900 bg-zinc-900 text-white hover:bg-zinc-700 disabled:border-zinc-200 disabled:bg-zinc-100 disabled:text-zinc-400",
-    galleryCounter: isDark
-      ? "border-white/10 bg-white/5 text-zinc-300"
-      : "border-zinc-200 bg-white text-zinc-600",
+    tabActive: isDark
+      ? "border-white bg-white text-zinc-950"
+      : "border-zinc-900 bg-zinc-900 text-white",
+    tabIdle: isDark
+      ? "border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10"
+      : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100",
+    tile: isDark
+      ? "border-white/10 bg-white/[0.03]"
+      : "border-zinc-200 bg-white",
+    galleryCounter: isDark ? "text-zinc-400" : "text-zinc-500",
   };
 
   const projectFacts = [
@@ -176,19 +221,16 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
     { label: text.type, value: project.type[language] },
   ];
 
-  const goPrev = () => {
-    if (!canGoPrev) return;
-    setGalleryDirection("prev");
-    setStartIndex((prev) => Math.max(prev - 2, 0));
-  };
-
-  const goNext = () => {
-    if (!canGoNext) return;
-    setGalleryDirection("next");
-    setStartIndex((prev) =>
-      Math.min(prev + 2, Math.max(project.images.length - 2, 0))
-    );
-  };
+  const kindOrder: ImageKind[] = ["model", "coordination", "documentation"];
+  const galleryTabs: { key: ImageKind | "all"; count: number }[] =
+    kindCounts.size > 1
+      ? [
+          { key: "all", count: project.images.length },
+          ...kindOrder
+            .filter((kind) => kindCounts.has(kind))
+            .map((kind) => ({ key: kind, count: kindCounts.get(kind) ?? 0 })),
+        ]
+      : [];
 
   const storyCards = project.story
     ? [
@@ -293,78 +335,99 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
 
       <Reveal as="section" className="mx-auto max-w-7xl px-6 py-6">
         <div>
-          <h2 className="mb-6 text-2xl font-bold tracking-tight sm:text-3xl">
-            {text.gallery}
-          </h2>
-
-          <div className="mb-5 grid grid-cols-2 items-center gap-3 sm:grid-cols-[1fr_auto_1fr]">
-            <button
-              type="button"
-              onClick={goPrev}
-              disabled={!canGoPrev}
-              aria-label={text.prevImage}
-              className={`col-start-1 row-start-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-lg transition disabled:cursor-not-allowed disabled:shadow-none sm:row-start-1 sm:w-auto sm:min-w-[130px] ${pageClasses.galleryButton}`}
-            >
-              <span aria-hidden="true">←</span>
-              <span>{text.prevImage}</span>
-            </button>
-
-            <p
-              className={`col-span-2 row-start-1 rounded-full border px-4 py-2 text-center text-sm font-medium sm:col-span-1 sm:col-start-2 ${pageClasses.galleryCounter}`}
-              aria-live="polite"
-            >
-              {text.imageCounter} {startIndex + 1}–
-              {Math.min(startIndex + 2, project.images.length)}{" "}
-              {text.imageCounterSeparator} {project.images.length}
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              {text.gallery}
+            </h2>
+            <p className={`text-sm font-medium ${pageClasses.galleryCounter}`}>
+              {visibleIndices.length} {text.imagesCount}
             </p>
-
-            <button
-              type="button"
-              onClick={goNext}
-              disabled={!canGoNext}
-              aria-label={text.nextImage}
-              className={`col-start-2 row-start-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-lg transition disabled:cursor-not-allowed disabled:shadow-none sm:col-start-3 sm:row-start-1 sm:w-auto sm:min-w-[130px] sm:justify-self-end ${pageClasses.galleryButton}`}
-            >
-              <span>{text.nextImage}</span>
-              <span aria-hidden="true">→</span>
-            </button>
           </div>
 
-          <div
-            key={startIndex}
-            className={`grid gap-6 md:grid-cols-2 ${
-              galleryDirection === "next"
-                ? "gallery-transition-next"
-                : galleryDirection === "prev"
-                  ? "gallery-transition-prev"
-                  : ""
-            }`}
-          >
-            {visibleImages.map((image, index) => (
-              <button
-                type="button"
-                key={image}
-                onClick={() => setActiveImageIndex(startIndex + index)}
-                aria-label={`${text.openImage} ${startIndex + index + 1}`}
-                className={`group block w-full cursor-zoom-in overflow-hidden rounded-3xl text-left shadow-xl transition hover:-translate-y-1 hover:shadow-2xl ${pageClasses.surface}`}
-              >
-                <Image
-                  src={image}
-                  alt={`${project.title[language]} ${startIndex + index + 1}`}
-                  width={1200}
-                  height={800}
-                  className="h-auto w-full object-cover transition duration-500 group-hover:scale-[1.025]"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                {project.captions?.[startIndex + index] && (
-                  <span
-                    className={`block px-5 py-4 text-sm leading-6 ${pageClasses.softText}`}
+          {galleryTabs.length > 0 && (
+            <div
+              role="group"
+              aria-label={text.galleryFilter}
+              className="mb-6 flex flex-wrap gap-2"
+            >
+              {galleryTabs.map((tab) => {
+                const isActive = activeKind === tab.key;
+                return (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    aria-pressed={isActive}
+                    onClick={() => setActiveKind(tab.key)}
+                    className={`inline-flex min-h-10 items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
+                      isActive ? pageClasses.tabActive : pageClasses.tabIdle
+                    }`}
                   >
-                    {project.captions[startIndex + index][language]}
+                    {text.kinds[tab.key]}
+                    <span className="text-xs tabular-nums opacity-60">
+                      {tab.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <div
+            key={activeKind}
+            className="gallery-fade grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {visibleIndices.map((imageIndex, position) => {
+              const featured = position === 0 && visibleIndices.length > 2;
+              const caption = project.captions?.[imageIndex]?.[language];
+              return (
+                <button
+                  type="button"
+                  key={project.images[imageIndex]}
+                  onClick={() => setActiveImageIndex(imageIndex)}
+                  aria-label={`${text.openImage} ${imageIndex + 1}${
+                    caption ? `: ${caption}` : ""
+                  }`}
+                  className={`group flex w-full cursor-zoom-in flex-col overflow-hidden rounded-3xl border text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl ${
+                    pageClasses.tile
+                  } ${featured ? "sm:col-span-2 lg:row-span-2" : ""}`}
+                >
+                  <span
+                    className={`relative block w-full overflow-hidden bg-white ${
+                      featured
+                        ? "aspect-[16/10] lg:aspect-auto lg:min-h-[22rem] lg:flex-1"
+                        : "aspect-[16/10]"
+                    }`}
+                  >
+                    <Image
+                      src={project.images[imageIndex]}
+                      alt={caption ?? `${project.title[language]} ${imageIndex + 1}`}
+                      fill
+                      className="object-contain transition duration-500 group-hover:scale-[1.03]"
+                      sizes={
+                        featured
+                          ? "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 66vw"
+                          : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      }
+                      priority={position === 0}
+                    />
+                    {galleryTabs.length > 0 && activeKind === "all" && (
+                      <span className="absolute left-3 top-3 rounded-full bg-zinc-900/80 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
+                        {text.kinds[kindOf(imageIndex)]}
+                      </span>
+                    )}
                   </span>
-                )}
-              </button>
-            ))}
+                  {caption && (
+                    <span
+                      className={`block px-5 py-4 text-sm leading-6 ${
+                        featured ? "" : "line-clamp-2"
+                      } ${pageClasses.softText}`}
+                    >
+                      {caption}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </Reveal>
@@ -459,8 +522,8 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
         >
           <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 text-white">
             <p className="text-sm font-semibold">
-              {text.imageCounter} {activeImageIndex + 1}{" "}
-              {text.imageCounterSeparator} {project.images.length}
+              {text.imageCounter} {visibleIndices.indexOf(activeImageIndex) + 1}{" "}
+              {text.imageCounterSeparator} {visibleIndices.length}
               {activeCaption && (
                 <span className="ml-3 font-normal text-white/70">
                   — {activeCaption}
@@ -484,10 +547,7 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
-                setActiveImageIndex(
-                  (activeImageIndex - 1 + project.images.length) %
-                    project.images.length
-                );
+                stepImage(-1);
               }}
               className="absolute left-0 z-10 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/70 text-2xl font-bold text-white shadow-xl transition hover:bg-white hover:text-black sm:left-3 sm:h-14 sm:w-14"
               aria-label={text.previousSingleImage}
@@ -510,9 +570,7 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
-                setActiveImageIndex(
-                  (activeImageIndex + 1) % project.images.length
-                );
+                stepImage(1);
               }}
               className="absolute right-0 z-10 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/70 text-2xl font-bold text-white shadow-xl transition hover:bg-white hover:text-black sm:right-3 sm:h-14 sm:w-14"
               aria-label={text.nextSingleImage}
@@ -520,6 +578,40 @@ export default function ProjectDetailClient({ project, prev, next }: Props) {
               →
             </button>
           </div>
+
+          {visibleIndices.length > 1 && (
+            <div
+              className="mx-auto flex w-full max-w-7xl justify-start gap-2 overflow-x-auto pb-1 sm:justify-center"
+              onClick={(event) => event.stopPropagation()}
+            >
+              {visibleIndices.map((imageIndex) => {
+                const isActive = imageIndex === activeImageIndex;
+                return (
+                  <button
+                    key={project.images[imageIndex]}
+                    ref={isActive ? activeThumbRef : undefined}
+                    type="button"
+                    onClick={() => setActiveImageIndex(imageIndex)}
+                    aria-label={`${text.openImage} ${imageIndex + 1}`}
+                    aria-current={isActive}
+                    className={`relative h-14 w-[5.5rem] shrink-0 overflow-hidden rounded-lg bg-white transition sm:h-16 sm:w-24 ${
+                      isActive
+                        ? "opacity-100 ring-2 ring-white"
+                        : "opacity-45 hover:opacity-90"
+                    }`}
+                  >
+                    <Image
+                      src={project.images[imageIndex]}
+                      alt=""
+                      fill
+                      className="object-contain"
+                      sizes="96px"
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </main>

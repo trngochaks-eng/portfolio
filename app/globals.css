@@ -48,36 +48,19 @@ dd {
   animation: fadeUp 0.7s ease-out both;
 }
 
-@keyframes galleryFromRight {
+@keyframes galleryFade {
   from {
     opacity: 0;
-    transform: translateX(28px) scale(0.985);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-@keyframes galleryFromLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-28px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-.gallery-transition-next {
-  animation: galleryFromRight 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
-  will-change: transform, opacity;
-}
-
-.gallery-transition-prev {
-  animation: galleryFromLeft 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
-  will-change: transform, opacity;
+.gallery-fade {
+  animation: galleryFade 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 :focus-visible {
@@ -91,8 +74,7 @@ dd {
   }
 
   .animate-fade-up,
-  .gallery-transition-next,
-  .gallery-transition-prev {
+  .gallery-fade {
     animation: none;
   }
 }

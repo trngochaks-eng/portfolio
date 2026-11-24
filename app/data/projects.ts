@@ -5,6 +5,8 @@ export type LocalizedText = {
   VIE: string;
 };
 
+export type ImageKind = "model" | "coordination" | "documentation";
+
 export type ProjectItem = {
   id: string;
   title: LocalizedText;
@@ -23,6 +25,8 @@ export type ProjectItem = {
   tools: string[];
   images: string[];
   captions?: LocalizedText[];
+  /** Gallery category per image, index-matched with `images`. */
+  imageKinds?: ImageKind[];
   story?: {
     challenge: LocalizedText;
     approach: { ENG: string[]; VIE: string[] };
@@ -640,9 +644,18 @@ const storyById: Record<string, NonNullable<ProjectItem["story"]>> = {
   },
 };
 
+// Images not listed here default to "model".
+const imageKindsById: Record<string, ImageKind[]> = {
+  project3: ["model", "model", "model", "model", "model", "coordination", "coordination"],
+  project2: ["model", "model", "model", "model", "documentation", "documentation", "documentation"],
+};
+
 export const projects: ProjectItem[] = rawProjects.map((project) => ({
   ...project,
   captions: captionsById[project.id],
+  imageKinds: project.images.map(
+    (_, index) => imageKindsById[project.id]?.[index] ?? "model"
+  ),
   story: storyById[project.id],
 }));
 
